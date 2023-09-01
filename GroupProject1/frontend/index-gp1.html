@@ -28,10 +28,47 @@
               </div>
           </div>
       </nav>
-       <div class="container">
-           <h1 class="mt-5">Basic Template </h1>
-           <p class="lead">Simple template to start your design with</p>
-       </div>
+
+      <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="src/img/Placeholder.png" alt="Image" class="img-fluid" style="max-width: 500px; max-height: 500px;">
+            </div>
+            <div class="col-md-4">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
+                </p>
+            </div>
+        </div>
+        
+        <div class="container mt-5">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#downloadModal">
+                Download
+            </button>
+
+            <div class="modal fade" id="downloadModal" tabindex="-1" role="dialog" aria-labelledby="downloadModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="downloadModalLabel">Download Agreement</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>This is a sample download agreement. Please read and accept the terms to proceed with the download.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
+                            <a id="downloadLink" class="btn btn-success" href="src/img/Placeholder.png" download>Accept & Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
