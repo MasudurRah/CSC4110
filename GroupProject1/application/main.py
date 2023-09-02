@@ -1,25 +1,35 @@
 import csv
+import os
 
-def import_data():
-  with open("orders.csv", 'r') as x:
-    y=csv.y(x)
-    import_data()
+class CsvOperations:
+    def __init__(self, filename):
+        self.filename = filename
 
-def query_data(id):
-  with open('orders.csv') as file_obj:
-    reader_obj = csv.reader(file_obj)
-    for row in reader_obj:
-        try:
-            if row[0] == '10586':
-                value = int(row[3])
-        except:
-            continue
-    print(value)
-    query_data()
+    def add_data(self, order_id):
+        with open(self.filename, 'a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([order_id])
 
-def main():
-  print(12)
-  main()
+    def remove_data(self, order_id):
+        data = []
+        with open(self.filename, 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if row[0] != order_id:
+                    data.append(row)
 
+        with open(self.filename, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(data)
 
+    def query_data(self, order_id):
+        data = []
+        with open(self.filename, 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if row[0] == order_id:
+                    data = row
+                    break
+
+        return data
 
