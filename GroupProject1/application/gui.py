@@ -87,6 +87,47 @@ def query_data():
     query_button = tk.Button(query_window, text="Query", command=results)
     query_button.pack()
 
+def edit_data():
+    def edit():
+        id = entry.get()
+        update = [data_entry.get() for data_entry in fields]
+        data = []
+        
+        with open(csv_file, 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                if row[0] == id:
+                    row = update
+                data.append(row)
+        with open(csv_file, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(data)
+        edit_window.destroy()
+
+    edit_window = tk.Toplevel(gui)
+    edit_window.title("Edit Data")
+
+    id_label = tk.Label(edit_window, text="Enter ID:")
+    id_label.pack()
+    entry = tk.Entry(edit_window)
+    entry.pack()
+
+    header_data = []
+    with open(csv_file, 'r') as file:
+        reader = csv.reader(file)
+        header_data = next(reader)
+
+    fields = []
+
+    for i, header_rows in enumerate(header_data):
+        id_label = tk.Label(edit_window, text=header_rows)
+        id_label.pack()
+        id_entry = tk.Entry(edit_window)
+        id_entry.pack()
+        fields.append(id_entry)
+
+    edit_button = tk.Button(edit_window, text="Edit", command=edit)
+    edit_button.pack()
 
 gui = tk.Tk()
 gui.title("demo")
@@ -95,6 +136,7 @@ import_button = tk.Button(gui, text="Import", command=open_file)
 remove_button = tk.Button(gui, text="Remove", command=remove_data)
 add_button = tk.Button(gui, text="Add", command=add_data)
 query_button = tk.Button(gui, text="Query", command=query_data)
+edit_button = tk.Button(gui, text="Edit", command=edit_data)
 status_label = tk.Label(gui, text="No file opened")
 
 
@@ -102,6 +144,7 @@ import_button.pack()
 remove_button.pack()
 add_button.pack()
 query_button.pack()
+edit_button.pack()
 status_label.pack()
 
 gui.mainloop()
