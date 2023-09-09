@@ -1,0 +1,30 @@
+.homepageFooter {
+  background-color: #0C5449;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.navbar {
+  background-color: #FFCC33;
+}
+
+.navbar-nav .nav-item {
+  margin-right: 10px;
+}
+
+.img-fluid {
+  max-width: 500px;
+  max-height: 500px;
+  display: block; /* Ensures the image is treated as a block-level element */
+  margin-bottom: 30px;
+}
+
+/* Add a border to the image */
+.img-fluid {
+  border: 1px solid #ccc;
+}
