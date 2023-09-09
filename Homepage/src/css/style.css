@@ -20,10 +20,6 @@
   color: #fff;
   text-align: center;
   padding: 10px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
 }
 
 .navbar {
@@ -43,5 +39,10 @@
 
 /* Add a border to the image */
 .img-fluid {
-  border: 1px solid #ccc;
+  border: 1px solid black;
+}
+
+.producthomepage {
+  text-align: center;
+  /* Add any other styles you want for this class */
 }
