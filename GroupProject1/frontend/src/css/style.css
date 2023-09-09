@@ -21,7 +21,7 @@
   max-width: 500px;
   max-height: 500px;
   display: block; /* Ensures the image is treated as a block-level element */
-  margin: 0 auto; /* Center the image horizontally */
+  margin-bottom: 30px;
 }
 
 /* Add a border to the image */
