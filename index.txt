@@ -58,9 +58,8 @@
 
     <div class="container mt-5">
         <div class="row justify-content-center align-items-center">
-
             <div class="col-md-6 text-center">
-                <img src="Old Main.jpg" alt="Image" style="max-width: 500px; max-height: 500px; padding: 100px;">
+                <img src="Old Main.jpg" alt="Image" style="max-width: 700px; max-height: 700px; padding: 50px;">
             </div>
 
             <div class="col-md-6 text-center">
@@ -71,29 +70,36 @@
             </div>
         </div>
 
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
-        </script>
+        <!-- Scroll-down section -->
+        <div class="row justify-content-center align-items-center mt-5">
+            <div class="col-md-6 text-center">
+                <img src="cat.jpg" alt="This Week's Project" style="max-width: 700px; max-height: 700px; padding: 50px;">
+            </div>
 
-        <style>
-            .homepageFooter {
-                background-color: #0C5449; /* Green color */
-                color: #fff; /* White text color */
-                text-align: center;
-                padding: 12px;
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-            }
-        </style>
-
-        <footer class="homepageFooter">
-            <p>Authors: Aleks, Abdulrahman, D, Hamam, Mas, Nadinne <br>
-
-        </footer>
+            <div class="col-md-6 text-center">
+                <div class="mainText">
+                    <p style="color:black; padding: 100px;">This week's project is Project 1.</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+
+    <style>
+        .homepageFooter {
+            background-color: #0C5449; /* Green color */
+            color: #fff; /* White text color */
+            text-align: center;
+            padding: 12px;
+        }
+    </style>
+
+    <footer class="homepageFooter">
+        <p>Authors: Aleks, Abdulrahman, D, Hamam, Mas, Nadinne <br>
+    </footer>
 
 </body>
 
