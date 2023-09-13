@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import csv
 
 csv_file = None  
@@ -11,6 +11,16 @@ def open_file():
         csv_file = file_path
         import_text.config(text=f"File opened: {csv_file}")
 
+def validate(function):
+    def validate_button():
+        global csv_file
+        if csv_file is None:
+            messagebox.showwarning("Warning", "No CSV file found")
+        else:
+            function()
+    return validate_button
+
+@validate
 def remove_data():
     def delete():
         row_id = id_data.get()
@@ -35,6 +45,7 @@ def remove_data():
     delete_button = tk.Button(delete_screen, text="Delete", command=delete)
     delete_button.pack()
 
+@validate
 def add_data():
     def save():
         data = [entry.get() for entry in data_entry]
@@ -63,6 +74,7 @@ def add_data():
     save_button = tk.Button(add_screen, text="Save", command=save)
     save_button.grid(row=len(header_data), columnspan=2, padx=10, pady=10)
 
+@validate
 def query_data():
     def results():
         row_data = id_data.get()
@@ -87,6 +99,7 @@ def query_data():
     query_button = tk.Button(query_screen, text="Query", command=results)
     query_button.pack()
 
+@validate
 def edit_data():
     def edit():
         id = id_data.get()
@@ -131,14 +144,17 @@ def edit_data():
 
 gui = tk.Tk()
 gui.title("CSV Editor")
-gui.geometry("800x400")
+gui.geometry("300x400")
 
-import_button = tk.Button(gui, text="Import", command=open_file)
-remove_button = tk.Button(gui, text="Remove", command=remove_data)
-add_button = tk.Button(gui, text="Add", command=add_data)
-query_button = tk.Button(gui, text="Query", command=query_data)
-edit_button = tk.Button(gui, text="Edit", command=edit_data)
-import_text = tk.Label(gui, text="No file opened")
+title_text = tk.Label(gui, text="CSV Editor", font=("Arial", 24))
+title_text.pack(pady=20)
+
+import_button = tk.Button(gui, text="Import", command=open_file, height=3, width=25)
+remove_button = tk.Button(gui, text="Remove", command=remove_data, height=3, width=25)
+add_button = tk.Button(gui, text="Add", command=add_data, height=3, width=25)
+query_button = tk.Button(gui, text="Query", command=query_data, height=3, width=25)
+edit_button = tk.Button(gui, text="Edit", command=edit_data, height=3, width=25)
+import_text = tk.Label(gui, text="No file opened", height=3, width=25)
 
 
 import_button.pack()
