@@ -79,15 +79,31 @@ def query_data():
     def results():
         row_data = id_data.get()
         result = []
+        col_names = []
         with open(csv_file, 'r') as file:
             reader = csv.reader(file)
+            col_names = next(reader)
             for row in reader:
                 if row[0] == row_data:
                     result.append(row)
+
         result_screen = tk.Toplevel(gui)
         result_screen.title("Query Result")
-        for row in result:
-            tk.Label(result_screen, text=", ".join(row)).pack()
+
+        if not result:
+            messagebox.showinfo("Result", "No matching records found")
+        else:
+            frame = tk.Frame(result_screen)
+            frame.pack()
+
+            for i, col_name in enumerate(col_names):
+                padded_col_name = col_name.ljust(20)
+                columntext = tk.Label(frame, text=padded_col_name)
+                columntext.grid(row=i, column=0)
+
+                for j, row in enumerate(result):
+                    padded_row_data = row[i].ljust(20)
+                    tk.Label(frame, text=padded_row_data).grid(row=i, column=j+1)
 
     query_screen = tk.Toplevel(gui)
     query_screen.title("Query Data")
