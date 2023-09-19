@@ -17,28 +17,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
     </script>
-
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;     
-            min-height: 100vh; /* Make sure the body covers the viewport height */
-        }
-
-        main {
-            flex-grow: 2; /* Allow the main content to grow and push the footer to the bottom */
-            margin-bottom: 25px; /* Adjust this value to increase or decrease padding between image and footer */
-        }
-
-        .homepageFooter {
-            margin-top: auto; /* Push the footer to the bottom */
-            font-size: 14px;
-        }
-
-        .img-fluid {
-            margin-top: -36px; /* Adjust this value to move the image up or down */
-        }
-    </style>
 </head>
 
 <body>
@@ -46,7 +24,7 @@
         <div class="container-fluid">
             <!-- Left-aligned text -->
             <a class="navbar-brand" href="../../Homepage/index.html">Group 5</a>
-
+            
             <!-- Right-aligned navigation links -->
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
@@ -67,22 +45,27 @@
         </div>
     </nav>
 
-    <main class="container mt-5 mb-5">
+      <div class="container mt-5">
         <div class="row">
             <div class="col-md-6">
-                <img src="src/img/UI Image.png" alt="Image" class="img-fluid">
+                <img src="src/img/Placeholder.png" alt="Image" class="img-fluid">
             </div>
             <div class="col-md-4">
-                <p style="color:black;">For this project, our group worked on behalf of Forestview to create a proposal / “mock” application. This application deals with data storage. It allows the user to use Python to import, add, retrieve, edit, and remove data using a CSV file. This application is part of Forestview’s upcoming SafeZone© proposals to key customers, such as Dell EMC.
+                <p style="color:black;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat, purus eu tempus blandit, ante leo vulputate odio, nec tristique quam dui vel lectus.
                 </p>
-                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#downloadModal">
-                    Download the application code
-                </button>
             </div>
         </div>
-    </main>
+      </div>
+        
+      <div class="container mt-7">
+        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#downloadModal">
+            Download
+        </button>
 
-    <div class="container">
         <div class="modal fade" id="downloadModal" tabindex="-1" role="dialog" aria-labelledby="downloadModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -93,7 +76,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>By using Group 5's website, you accept the terms and conditions in full. You will not use this website for anything other than viewing each project and testing functionality. Website will not be used to for ill intent nor to plagiarize the work and claim as one's own. If you agree to these statements please click "Accept & Download". Otherwise, press "Decline" and do not use this website any further.</p>
+                        <p>By using Group 5's website, you accept the terms and conditions in full. You will not use this website for anything other than viewing each project and testing functionality. Website will not be used to for ill intent nor to plagirize the work and claim as ones own. If you agree to these statements please click "Accept & Download". Otherwise, press "Decline" and do not use this website any further.</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
@@ -104,14 +87,12 @@
         </div>
     </div>
 
-    <footer class="homepageFooter">
-        <p>Authors: Aleks, Abdulrahman, D, Hamam, Mas, Nadinne <br> Created by: Group 5 of CSC 4110, Fall 2023. <br>
-            <a href="Home">Home</a>
-            <a href="../GroupProject1/frontend/index-gp1.html">Project 1</a>
-            <a href="../GroupProject2/index-gp2.html">Project 2</a>
-            <a href="../GroupProject3/index-gp3.html">Project 3</a>
-            <a href="../GroupProject4/index-gp4.html">Project 4</a></p>
-    </footer>
-</body>
 
+    
+<footer class="homepageFooter">
+  <p>Authors: Aleks, Abdulrahman, D, Hamam, Mas, Nadinne <br>
+  <a href="Home">Home</a></p>
+</footer>
+
+</body>
 </html>
