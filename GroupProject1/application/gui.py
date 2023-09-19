@@ -3,22 +3,22 @@ from tkinter import filedialog, messagebox
 import csv
 import re
 
-csv_file = None
+CSV_FILE = None
 
-invalid_characters = r'[!#$%^&*()\_=+{}\[\]\\|?]'
-compile_invalid = re.compile(invalid_characters)
+INVALID_CHARACTERS = r'[!#$%^&*()\_=+{}\[\]\\|?]'
+compile_invalid = re.compile(INVALID_CHARACTERS)
 
 def open_file():
-    global csv_file
+    global CSV_FILE
     file_path = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
     if file_path:
-        csv_file = file_path
-        import_text.config(text=f"File opened: {csv_file}")
+        CSV_FILE = file_path
+        import_text.config(text=f"File opened: {CSV_FILE}")
 
 def validate(function):
     def validate_button():
-        global csv_file
-        if csv_file is None:
+        global CSV_FILE
+        if CSV_FILE is None:
             messagebox.showwarning("Warning", "No CSV file found")
         else:
             function()
@@ -29,12 +29,12 @@ def remove_data():
     def delete():
         row_id = id_data.get()
         data = []
-        with open(csv_file, 'r') as file:
+        with open(CSV_FILE, 'r', encoding="utf-8") as file:
             reader = csv.reader(file)
             for row in reader:
                 if row[0] != row_id:
                     data.append(row)
-        with open(csv_file, 'w', newline='') as file:
+        with open(CSV_FILE, 'w', newline='', encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerows(data)
         delete_screen.destroy()
@@ -59,7 +59,7 @@ def add_data():
                 messagebox.showerror("Error", "Special characters not allowed")
                 return
 
-        with open(csv_file, 'a', newline='') as file:
+        with open(CSV_FILE, 'a', newline='', encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerow(data)
         add_screen.destroy()
@@ -68,7 +68,7 @@ def add_data():
     add_screen.title("Add Data")
 
     header_data = []
-    with open(csv_file, 'r') as file:
+    with open(CSV_FILE, 'r', encoding="utf-8") as file:
         reader = csv.reader(file)
         header_data = next(reader)
 
@@ -90,7 +90,7 @@ def query_data():
         row_data = id_data.get()
         result = []
         col_names = []
-        with open(csv_file, 'r') as file:
+        with open(CSV_FILE, 'r', encoding="utf-8") as file:
             reader = csv.reader(file)
             col_names = next(reader)
             for row in reader:
@@ -112,16 +112,16 @@ def query_data():
                 columntext.grid(row=i, column=0)
 
                 for j, row in enumerate(result):
-                    padded_row_data = row[i].ljust(20)
+                    row_data = row[i].ljust(20)
 
                     if "ssn" in col_name.lower() or "social security" in col_name.lower():
-                        formatted_ssn = f"{padded_row_data[:3]}-{padded_row_data[3:5]}-{padded_row_data[5:]}"
-                        tk.Label(frame, text=formatted_ssn).grid(row=i, column=j + 1)
+                        ssn = f"{row_data[:3]}-{row_data[3:5]}-{row_data[5:]}"
+                        tk.Label(frame, text=ssn).grid(row=i, column=j + 1)
                     elif "phone" in col_name.lower():
-                        formatted_phone = f"{padded_row_data[:3]}-{padded_row_data[3:6]}-{padded_row_data[6:]}"
-                        tk.Label(frame, text=formatted_phone).grid(row=i, column=j + 1)
+                        phone = f"{row_data[:3]}-{row_data[3:6]}-{row_data[6:]}"
+                        tk.Label(frame, text=phone).grid(row=i, column=j + 1)
                     else:
-                        tk.Label(frame, text=padded_row_data).grid(row=i, column=j + 1)
+                        tk.Label(frame, text=row_data).grid(row=i, column=j + 1)
 
     query_screen = tk.Toplevel(gui)
     query_screen.title("Query Data")
@@ -136,7 +136,7 @@ def query_data():
 @validate
 def edit_data():
     def edit():
-        id = id_data.get()
+        id_value = id_data.get()
         update = [data_entry.get() for data_entry in fields]
 
         for value in update:
@@ -146,13 +146,13 @@ def edit_data():
 
         data = []
 
-        with open(csv_file, 'r') as file:
+        with open(CSV_FILE, 'r', encoding="utf-8") as file:
             reader = csv.reader(file)
             for row in reader:
-                if row[0] == id:
+                if row[0] == id_value:
                     row = update
                 data.append(row)
-        with open(csv_file, 'w', newline='') as file:
+        with open(CSV_FILE, 'w', newline='', encoding="utf-8") as file:
             writer = csv.writer(file)
             writer.writerows(data)
         edit_screen.destroy()
@@ -166,13 +166,13 @@ def edit_data():
     id_data.pack()
 
     header_data = []
-    with open(csv_file, 'r') as file:
+    with open(CSV_FILE, 'r', encoding="utf-8") as file:
         reader = csv.reader(file)
         header_data = next(reader)
 
     fields = []
 
-    for i, header_rows in enumerate(header_data):
+    for header_rows in header_data:
         id_text = tk.Label(edit_screen, text=header_rows)
         id_text.pack()
         id_entry = tk.Entry(edit_screen)
@@ -192,15 +192,15 @@ title_text.pack(pady=20)
 import_button = tk.Button(gui, text="Import", command=open_file, height=3, width=25)
 remove_button = tk.Button(gui, text="Remove", command=remove_data, height=3, width=25)
 add_button = tk.Button(gui, text="Add", command=add_data, height=3, width=25)
-query_button = tk.Button(gui, text="Query", command=query_data, height=3, width=25)
-edit_button = tk.Button(gui, text="Edit", command=edit_data, height=3, width=25)
+query_but = tk.Button(gui, text="Query", command=query_data, height=3, width=25)
+edit_but = tk.Button(gui, text="Edit", command=edit_data, height=3, width=25)
 import_text = tk.Label(gui, text="No file opened", height=3, width=25)
 
 import_button.pack()
 remove_button.pack()
 add_button.pack()
-query_button.pack()
-edit_button.pack()
+query_but.pack()
+edit_but.pack()
 import_text.pack()
 
 gui.mainloop()
