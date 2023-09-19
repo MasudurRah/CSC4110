@@ -1,8 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import csv
+import re
 
-csv_file = None  
+csv_file = None
+
+invalid_characters = r'[!#$%^&*()\_=+{}\[\]\\|?]'
+compile_invalid = re.compile(invalid_characters)
 
 def open_file():
     global csv_file
@@ -49,6 +53,12 @@ def remove_data():
 def add_data():
     def save():
         data = [entry.get() for entry in data_entry]
+
+        for value in data:
+            if compile_invalid.search(value):
+                messagebox.showerror("Error", "Special characters not allowed")
+                return
+
         with open(csv_file, 'a', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(data)
@@ -103,7 +113,15 @@ def query_data():
 
                 for j, row in enumerate(result):
                     padded_row_data = row[i].ljust(20)
-                    tk.Label(frame, text=padded_row_data).grid(row=i, column=j+1)
+
+                    if "ssn" in col_name.lower() or "social security" in col_name.lower():
+                        formatted_ssn = f"{padded_row_data[:3]}-{padded_row_data[3:5]}-{padded_row_data[5:]}"
+                        tk.Label(frame, text=formatted_ssn).grid(row=i, column=j + 1)
+                    elif "phone" in col_name.lower():
+                        formatted_phone = f"{padded_row_data[:3]}-{padded_row_data[3:6]}-{padded_row_data[6:]}"
+                        tk.Label(frame, text=formatted_phone).grid(row=i, column=j + 1)
+                    else:
+                        tk.Label(frame, text=padded_row_data).grid(row=i, column=j + 1)
 
     query_screen = tk.Toplevel(gui)
     query_screen.title("Query Data")
@@ -120,8 +138,14 @@ def edit_data():
     def edit():
         id = id_data.get()
         update = [data_entry.get() for data_entry in fields]
+
+        for value in update:
+            if compile_invalid.search(value):
+                messagebox.showerror("Error", "Special characters not allowed")
+                return
+
         data = []
-        
+
         with open(csv_file, 'r') as file:
             reader = csv.reader(file)
             for row in reader:
@@ -171,7 +195,6 @@ add_button = tk.Button(gui, text="Add", command=add_data, height=3, width=25)
 query_button = tk.Button(gui, text="Query", command=query_data, height=3, width=25)
 edit_button = tk.Button(gui, text="Edit", command=edit_data, height=3, width=25)
 import_text = tk.Label(gui, text="No file opened", height=3, width=25)
-
 
 import_button.pack()
 remove_button.pack()
