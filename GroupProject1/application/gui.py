@@ -61,6 +61,10 @@ def add_data():
     def save():
         data = [entry.get() for entry in data_entry]
 
+        if all(not entry for entry in data):
+            messagebox.showerror("Error", "Input needed")
+            return
+
         #Validation for special characters
         for value in data:
             if compile_invalid.search(value):
