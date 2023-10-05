@@ -2,8 +2,11 @@ import tkinter as tk
 import turtle
 import random
 
+# Load words from the "GroupProject2/files/sgb-words.txt" file into a list
+with open("GroupProject2/files/sgb-words.txt", "r") as file:
+    word_list = file.read().splitlines()
+
 # Initialize the game state
-word_list = ["apple", "table", "chair", "house", "tiger"]
 current_word = None  # Initialize with None to indicate the game hasn't started
 attempts_left = 5
 current_attempt = 0
@@ -59,7 +62,7 @@ def draw_attempt(user_input, feedback, y_offset):
         elif feedback[i] == "Y":
             t.fillcolor("yellow")
         else:
-            t.fillcolor("red")  # Box turns gray if the letter isn't within the word
+            t.fillcolor("gray")  # Box turns gray if the letter isn't within the word
 
         t.begin_fill()
         for _ in range(4):
