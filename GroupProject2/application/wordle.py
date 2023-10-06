@@ -13,19 +13,22 @@ current_word = None
 attempts_left = 5
 current_attempt = 0
 previous_attempts = []
-timer_seconds = 60
+timer_seconds = 60  # Initialize the timer to 60 seconds
+timer_active = False  # Indicates whether the timer is active
 
 # Function to update the timer label
 def update_timer():
-    global timer_seconds
+    global timer_seconds, timer_active
     timer_label.config(text=f"Time left: {timer_seconds} seconds")
-    if timer_seconds > 0:
+    if timer_seconds > 0 and timer_active:
         timer_seconds -= 1
         root.after(1000, update_timer)
     else:
-        results_label.config(text="Time's up! You lost. The word was: " + current_word)
-        play_again_button.config(state=tk.NORMAL)
+        if current_attempt < 5:
+            results_label.config(text="Time's up! You lost. The word was: " + current_word)
+        play_again_button.config(state=tk.NORMAL)  # Enable "Play Again" button
         entry.config(state=tk.DISABLED)
+        timer_active = False  # Stop the timer
 
 # Function to enable the input box after a delay
 def enable_input():
@@ -33,13 +36,14 @@ def enable_input():
 
 # Function to initialize the game
 def initialize_game():
-    global current_word, attempts_left, current_attempt, previous_attempts, timer_seconds
+    global current_word, attempts_left, current_attempt, previous_attempts, timer_seconds, timer_active
     current_word = random.choice(word_list)
     attempts_left = 5
     current_attempt = 0
     previous_attempts = []
-    timer_seconds = 60
-    update_timer()
+    timer_seconds = 60  # Reset the timer to 60 seconds
+    timer_active = True  # Start the timer
+    update_timer()  # Start the timer immediately
     results_label.config(text="")
     entry.config(state=tk.NORMAL)
     entry.delete(0, tk.END)
@@ -104,13 +108,12 @@ def draw_attempt(user_input, feedback, y_offset):
 
 # Create a function to check the user's input and update the visual representation
 def check_word():
-    global current_word, current_attempt, attempts_left, previous_attempts
+    global current_word, current_attempt, attempts_left, previous_attempts, timer_active
     if current_attempt >= 5:
         return  # No more input after 5 attempts
 
     user_input = entry.get().lower()
     entry.delete(0, tk.END)
-
 
     if not re.match("^[a-zA-Z]*$", user_input):
         results_label.config(text="Enter a 5-letter word using only English letters")
@@ -145,9 +148,11 @@ def check_word():
     if feedback == "GGGGG":
         results_label.config(text="Congratulations! You guessed the word: " + current_word)
         play_again_button.config(state=tk.NORMAL)
+        timer_active = False  # Stop the timer when the game is won
     elif current_attempt >= 5:
         results_label.config(text="You lost. The word was: " + current_word)
         play_again_button.config(state=tk.NORMAL)
+        timer_active = False  # Stop the timer when the game is lost
 
     root.after(400, enable_input)
 
