@@ -2,12 +2,19 @@ import tkinter as tk
 import turtle
 import random
 
+# Load words from the "GroupProject2/files/sgb-words.txt" file into a list
+with open("GroupProject2/files/sgb-words.txt", "r") as file:
+    word_list = file.read().splitlines()
+
 # Initialize the game state
-word_list = ["apple", "table", "chair", "house", "tiger"]
 current_word = None  # Initialize with None to indicate the game hasn't started
 attempts_left = 5
 current_attempt = 0
 previous_attempts = []
+
+# Function to enable the input box after a delay
+def enable_input():
+    entry.config(state=tk.NORMAL)
 
 def initialize_game():
     global current_word, attempts_left, current_attempt, previous_attempts
@@ -59,7 +66,7 @@ def draw_attempt(user_input, feedback, y_offset):
         elif feedback[i] == "Y":
             t.fillcolor("yellow")
         else:
-            t.fillcolor("red")  # Box turns gray if the letter isn't within the word
+            t.fillcolor("red")  # Box turns red if the letter isn't within the word
 
         t.begin_fill()
         for _ in range(4):
@@ -104,16 +111,21 @@ def check_word():
 
     # Save the current attempt and draw it
     previous_attempts.append((user_input, feedback))
+
+    # Disable the input box before starting to draw
+    entry.config(state=tk.DISABLED)
+
     draw_attempt(user_input, feedback, (current_attempt - 1) * 40)
 
     if feedback == "GGGGG":
         results_label.config(text="Congratulations! You guessed the word: " + current_word)
-        entry.config(state=tk.DISABLED)
         play_again_button.config(state=tk.NORMAL)  # Enable "Play Again" button
     elif current_attempt >= 5:
         results_label.config(text="You lost. The word was: " + current_word)
-        entry.config(state=tk.DISABLED)
         play_again_button.config(state=tk.NORMAL)  # Enable "Play Again" button
+
+    # Enable the input box after 5 seconds
+    root.after(400, enable_input)
 
 # Bind the Enter key to the check_word function
 entry.bind("<Return>", lambda event=None: check_word())
