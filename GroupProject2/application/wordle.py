@@ -1,6 +1,7 @@
 import tkinter as tk
 import turtle
 import random
+import re  # Import the re module for regular expressions
 
 # Load words from the "GroupProject2/files/sgb-words.txt" file into a list
 with open("GroupProject2/files/sgb-words.txt", "r") as file:
@@ -88,6 +89,11 @@ def check_word():
 
     user_input = entry.get().lower()
     entry.delete(0, tk.END)
+
+    # Check if the input consists of only English letters
+    if not re.match("^[a-zA-Z]*$", user_input):
+        results_label.config(text="Enter a 5-letter word using only English letters")
+        return
 
     if len(user_input) != 5:
         results_label.config(text="Enter a 5-letter word")
