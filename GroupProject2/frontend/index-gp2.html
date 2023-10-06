@@ -1,30 +1,111 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            text-align: center;
-            padding: 100px;
-        }
+    <title>Group Project 2</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        h1 {
-            color: #333;
-            font-size: 24px;
-        }
+    <link rel="stylesheet" href="src/css/style.css">
 
-        p {
-            color: #666;
-            font-size: 16px;
-        }
-    </style>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
+    </script>
 </head>
+
 <body>
-    <h1>Page Under Construction</h1>
-    <p>This page doesn't exist yet, Check back later! Please check the URL or navigate to a different page.</p>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <!-- Left-aligned text -->
+            <a class="navbar-brand" href="../../Homepage/index.html">Group 5</a>
+            
+            <!-- Right-aligned navigation links -->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../GroupProject1/frontend/index-gp1.html">Project 1</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../GroupProject2/frontend/index-gp2.html">Project 2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../GroupProject3/index-gp3.html">Project 3</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../GroupProject4/index-gp4.html">Project 4</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="src/img/temp_image.jpg" alt="Image" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <p>Welcome to Group 5's website! For this week, our group is creating a Wordle game which will be drawn using turtle.</p>
+    
+                <h2>Technical Instructions:</h2>
+                <p>To use this application:</p>
+                <ol>
+                    <li>This is placeholder text and will be updated/fixed later when I have a better description of what the program will do. Also see the download agreement.  - D</li>
+                    <li>Click the "Download" button to access the application.</li>
+                    <li>Locate and run the provided executable file (e.g., "your_app_name.exe") to launch the application.</li>
+                    <li>Pick a difficulty and play to start the game.</li>
+                    <li>Ensure you comply with our terms and conditions, particularly regarding data privacy and usage restrictions.</li>
+                </ol>
+    
+                <p>If you have any technical questions or encounter any issues while using the application, please don't hesitate to reach out to our support team for assistance.</p>
+            </div>
+        </div>
+    </div>
+    
+        
+      <div class="container mt-7">
+        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#downloadModal">
+            Download
+        </button>
+
+        <div class="modal fade" id="downloadModal" tabindex="-1" role="dialog" aria-labelledby="downloadModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="downloadModalLabel">Download Agreement</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>By utilizing Group 5's website, you agree to its terms and conditions, which entail using the site solely for project viewing and functionality testing while abstaining from malicious intentions, unauthorized data sharing, or plagiarism of its content. This agreement underscores the critical aspects of data privacy and the prohibition of application sharing without prior authorization. You also acknowledge and accept a unilateral indemnity clause, absolving Group 5?? from legal repercussions related to data breaches, zero-day attacks, or database vulnerabilities such as SQL injection. Furthermore, you consent to periodic security assessments and the implementation of preventive measures, as deemed necessary by Group 5??? and its key vendors. Please note that security requirements may evolve over time due to technological advancements and changing security landscapes, and it is your responsibility to stay informed and adhere to these evolving stipulations. If you concur with these terms and conditions, kindly click "Accept & Download" to proceed; otherwise, select "Decline" to discontinue the use of this website. Your continued use of this website implies your complete acceptance of these terms.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Decline</button>
+                        <a id="downloadLink" class="btn btn-success" href="../application/dist/gui.exe" download>Accept & Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <footer class="homepageFooter">
+        <p>Authors: Aleks, Abdulrahman, D, Hamam, Mas, Nadinne <br> Created by: Group 5 of CSC 4110, Fall 2023. <br>
+        <a href="../../Homepage/index.html">Home</a>
+        <a href="../../GroupProject1/frontend/index-gp1.html">Project 1</a>
+        <a href="../../GroupProject2/frontend/index-gp2.html">Project 2</a>
+        <a href="../../GroupProject3/index-gp3.html">Project 3</a>
+        <a href="../../GroupProject4/index-gp4.html">Project 4</a></p>
+      </footer>
+      
+
 </body>
 </html>
