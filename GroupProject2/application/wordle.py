@@ -15,6 +15,7 @@ current_attempt = 0
 previous_attempts = []
 timer_seconds = 60  # Initialize the timer to 60 seconds
 timer_active = False  # Indicates whether the timer is active
+game_won = False  # Flag to track if the game is won
 
 # Function to update the timer label
 def update_timer():
@@ -24,7 +25,7 @@ def update_timer():
         timer_seconds -= 1
         root.after(1000, update_timer)
     else:
-        if current_attempt < 5:
+        if current_attempt < 5 and not game_won:
             results_label.config(text="Time's up! You lost. The word was: " + current_word)
         play_again_button.config(state=tk.NORMAL)  # Enable "Play Again" button
         entry.config(state=tk.DISABLED)
@@ -36,14 +37,15 @@ def enable_input():
 
 # Function to initialize the game
 def initialize_game():
-    global current_word, attempts_left, current_attempt, previous_attempts, timer_seconds, timer_active
-    current_word = random.choice(word_list)
+    global current_word, attempts_left, current_attempt, previous_attempts, timer_seconds, timer_active, game_won
+    current_word = None
     attempts_left = 5
     current_attempt = 0
     previous_attempts = []
     timer_seconds = 60  # Reset the timer to 60 seconds
-    timer_active = True  # Start the timer
-    update_timer()  # Start the timer immediately
+    timer_active = False  # Set timer_active to False initially
+    game_won = False  # Reset game_won flag
+    timer_label.config(text=f"Time left: {timer_seconds} seconds")
     results_label.config(text="")
     entry.config(state=tk.NORMAL)
     entry.delete(0, tk.END)
@@ -108,9 +110,10 @@ def draw_attempt(user_input, feedback, y_offset):
 
 # Create a function to check the user's input and update the visual representation
 def check_word():
-    global current_word, current_attempt, attempts_left, previous_attempts, timer_active
-    if current_attempt >= 5:
-        return  # No more input after 5 attempts
+    global current_word, current_attempt, attempts_left, previous_attempts, timer_active, game_won
+
+    if current_attempt >= 5 or game_won:
+        return  # No more input after 5 attempts or if the game is won
 
     user_input = entry.get().lower()
     entry.delete(0, tk.END)
@@ -125,7 +128,8 @@ def check_word():
 
     if current_word is None:
         current_word = random.choice(word_list)
-        play_again_button.config(state=tk.NORMAL)
+        timer_active = True  # Start the timer when the user inputs the first word
+        update_timer()  # Start the timer immediately
 
     current_attempt += 1
     feedback = ""
@@ -147,11 +151,14 @@ def check_word():
 
     if feedback == "GGGGG":
         results_label.config(text="Congratulations! You guessed the word: " + current_word)
+        game_won = True
         play_again_button.config(state=tk.NORMAL)
+        entry.config(state=tk.DISABLED)  # Disable input box when the game is won
         timer_active = False  # Stop the timer when the game is won
     elif current_attempt >= 5:
         results_label.config(text="You lost. The word was: " + current_word)
         play_again_button.config(state=tk.NORMAL)
+        entry.config(state=tk.DISABLED)
         timer_active = False  # Stop the timer when the game is lost
 
     root.after(400, enable_input)
