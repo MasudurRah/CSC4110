@@ -13,7 +13,7 @@ current_word = None
 attempts_left = 5
 current_attempt = 0
 previous_attempts = []
-timer_seconds = 60  # Initialize the timer to 60 seconds
+timer_seconds = 90  # Initialize the timer to 60 seconds
 timer_active = False  # Indicates whether the timer is active
 game_won = False  # Flag to track if the game is won
 
@@ -42,7 +42,7 @@ def initialize_game():
     attempts_left = 5
     current_attempt = 0
     previous_attempts = []
-    timer_seconds = 60  # Reset the timer to 60 seconds
+    timer_seconds = 90  # Reset the timer to 60 seconds
     timer_active = False  # Set timer_active to False initially
     game_won = False  # Reset game_won flag
     timer_label.config(text=f"Time left: {timer_seconds} seconds")
