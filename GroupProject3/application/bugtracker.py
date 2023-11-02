@@ -4,8 +4,8 @@ from tkinter import messagebox
 import csv
 import random
 
-#TODO: NEED TO MAKE IT SO IT READS FROM user_credentials.csv
 def check_credentials(username, password):
+    # Replace this function with your own user authentication logic
     return username == "admin" and password == "password"
 
 def generate_unique_ticket_number(existing_ticket_numbers):
@@ -18,19 +18,19 @@ def generate_unique_ticket_number(existing_ticket_numbers):
 existing_ticket_numbers = set()
 with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
     reader = csv.reader(csvfile)
-    next(reader)
+    next(reader)  # Skip the header row
     for row in reader:
         existing_ticket_numbers.add(row[0])
 
 current_username = ""
 
 def login():
-    global current_username
+    global current_username  # Use the global variable
     entered_username = username_entry.get()
     entered_password = password_entry.get()
 
     if check_credentials(entered_username, entered_password):
-        current_username = entered_username
+        current_username = entered_username  # Update the logged-in username
         login_window.destroy()
         open_dashboard()
     else:
@@ -90,13 +90,37 @@ def open_dashboard():
         save_button = tk.Button(new_ticket_window, text="Save", command=save_new_ticket)
         save_button.pack()
 
+    def search_ticket():
+        search_window = tk.Toplevel(dashboard_window)
+        search_window.title("Search Ticket")
+        
+        tk.Label(search_window, text="Enter Ticket Number:").pack()
+        search_entry = tk.Entry(search_window)
+        search_entry.pack()
+        
+        def search():
+            ticket_number = search_entry.get()
+            with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
+                reader = csv.reader(csvfile)
+                next(reader)
+                for row in reader:
+                    if row[0] == ticket_number:
+                        ticket_data = row
+                        open_ticket_window(ticket_data)
+                        search_window.destroy()
+                        return
+            messagebox.showerror("Ticket Not Found", "Ticket not found for the entered number.")
+        
+        search_button = tk.Button(search_window, text="Search", command=search)
+        search_button.pack()
+
     def refresh_treeview():
         for row in table.get_children():
             table.delete(row)
 
-        with open("GroupProject3/files/tickets.csv.csv", newline='') as csvfile:
+        with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
             reader = csv.reader(csvfile)
-            next(reader)
+            next(reader)  # Skip the header row
             for row in reader:
                 table.insert("", "end", values=row)
 
@@ -113,17 +137,20 @@ def open_dashboard():
 
     with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
         reader = csv.reader(csvfile)
-        next(reader)
+        next(reader)  # Skip the header row
         for row in reader:
             table.insert("", "end", values=row)
 
     new_ticket_button = tk.Button(dashboard_window, text="New Ticket", command=create_new_ticket)
+    search_button = tk.Button(dashboard_window, text="Search Ticket", command=search_ticket)
 
     table.bind("<Double-1>", on_double_click)
 
     table.pack()
     new_ticket_button.pack()
+    search_button.pack()
 
+# Create the main login window
 login_window = tk.Tk()
 login_window.title("Login")
 
