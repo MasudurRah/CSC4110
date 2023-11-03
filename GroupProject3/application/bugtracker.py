@@ -5,8 +5,14 @@ import csv
 import random
 
 def check_credentials(username, password):
-    # Replace this function with your own user authentication logic
-    return username == "admin" and password == "password"
+    with open("GroupProject3/files/user_credentials.csv", newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)  # Skip the header row
+        for row in reader:
+            if row and len(row) >= 2 and row[0] == username and row[1] == password:
+                return True
+    return False
+
 
 def generate_unique_ticket_number(existing_ticket_numbers):
     while True:
