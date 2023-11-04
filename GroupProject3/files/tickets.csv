@@ -1,4 +1,4 @@
-Ticket Number,Support Type,Name,Description,Reporter
+Ticket Number,Support Type,Name,Description,Reporter,Status
 19895,Software,John,Mic doest work,ok,True
 54717,General,Bob,Table broke,ok,False
 63289,Software,123,321,mas,True
