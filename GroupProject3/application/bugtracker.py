@@ -55,8 +55,33 @@ def open_dashboard():
         reporter = selected_row[4]
         status = selected_row[5]  # Assuming the status column is the 6th column in the CSV
 
-        details_label = tk.Label(ticket_window, text=f"Ticket Number: {ticket_number}\nSupport Type: {support_type}\nName: {name}\nDescription: {description}\nReporter: {reporter}\nStatus: {status}")
+        def toggle_ticket_status():
+            nonlocal status
+            if status == "True":
+                status = "False"
+            else:
+                status = "True"
+
+            # Update the ticket data in the CSV file
+            with open("GroupProject3/files/tickets.csv", 'r', newline='') as file:
+                rows = list(csv.reader(file))
+                for row in rows:
+                    if row[0] == ticket_number:
+                        row[5] = status  # Update the status
+                        break
+
+            with open("GroupProject3/files/tickets.csv", 'w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerows(rows)
+
+            toggle_button.config(text="Close Ticket" if status == "False" else "Open Ticket")
+            refresh_treeview()
+
+        details_label = tk.Label(ticket_window, text=f"Ticket Number: {ticket_number}\nSupport Type: {support_type}\nName: {name}\nDescription: {description}\nReporter: {reporter}\nStatus: {status}\n")
         details_label.pack()
+
+        toggle_button = tk.Button(ticket_window, text="Close Ticket" if status == "True" else "Open Ticket", command=toggle_ticket_status)
+        toggle_button.pack()
 
         def edit_ticket():
             edit_window = tk.Toplevel(ticket_window)
@@ -101,7 +126,7 @@ def open_dashboard():
                     writer.writerows(rows)
 
                 edit_window.destroy()
-                details_label.config(text=f"Ticket Number: {ticket_number}\nSupport Type: {edited_support_type}\nName: {edited_name}\nDescription: {edited_description}\nReporter: {reporter}\nStatus: {status}")
+                details_label.config(text=f"Ticket Number: {ticket_number}\nSupport Type: {edited_support_type}\nName: {edited_name}\nDescription: {edited_description}\nReporter: {reporter}\nStatus: {status}\n")
                 refresh_treeview()
 
             save_button = tk.Button(edit_window, text="Save", command=save_changes)
@@ -169,7 +194,7 @@ def open_dashboard():
                         open_ticket_window(ticket_data)
                         search_window.destroy()
                         return
-            messagebox.showerror("Ticket Not Found", "Ticket not found for the entered number.")
+                messagebox.showerror("Ticket Not Found", "Ticket not found for the entered number.")
 
         search_button = tk.Button(search_window, text="Search", command=search)
         search_button.pack()
@@ -182,25 +207,36 @@ def open_dashboard():
             reader = csv.reader(csvfile)
             next(reader)  # Skip the header row
             for row in reader:
-                table.insert("", "end", values=row)
+                # Only add rows with "True" status to the table
+                if row[5] == "True":
+                    table.insert("", "end", values=row)
+
+    def open_ticket_dashboard(selected_row):
+        ticket_window = tk.Toplevel(dashboard_window)
+        ticket_window.title("Ticket Details")
+        ticket_number, support_type, name, description, reporter, status = selected_row
+
+        details_label = tk.Label(ticket_window, text=f"Ticket Number: {ticket_number}\nSupport Type: {support_type}\nName: {name}\nDescription: {description}\nReporter: {reporter}\nStatus: {status}\n")
+        details_label.pack()
 
     def on_double_click(event):
         item = table.selection()[0]
-        open_ticket_window(table.item(item)["values"])
+        open_ticket_dashboard(table.item(item)["values"])
 
-    table = ttk.Treeview(dashboard_window, columns=("Ticket Number", "Support Type", "Name", "Description", "Reporter", "Status"))
+    table = ttk.Treeview(dashboard_window, columns=("Ticket Number", "Support Type", "Name", "Description", "Reporter"))
     table.heading("#1", text="Ticket Number")
     table.heading("#2", text="Support Type")
     table.heading("#3", text="Name")
     table.heading("#4", text="Description")
     table.heading("#5", text="Reporter")
-    table.heading("#6", text="Status")
 
     with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
         reader = csv.reader(csvfile)
         next(reader)  # Skip the header row
         for row in reader:
-            table.insert("", "end", values=row)
+            # Only add rows with "True" status to the table
+            if row[5] == "True":
+                table.insert("", "end", values=row)
 
     new_ticket_button = tk.Button(dashboard_window, text="New Ticket", command=create_new_ticket)
     search_button = tk.Button(dashboard_window, text="Search Ticket", command=search_ticket)
@@ -229,4 +265,3 @@ password_entry.grid(row=1, column=1, padx=10, pady=10)
 login_button.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 
 login_window.mainloop()
-
