@@ -21,13 +21,10 @@ def generate_unique_ticket_number(existing_ticket_numbers):
             return new_ticket_number
 
 existing_ticket_numbers = set()
-tickets_data = []
-
 with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
     reader = csv.reader(csvfile)
-    header = next(reader)  # Read the header row
+    next(reader)  # Skip the header row
     for row in reader:
-        tickets_data.append(row)
         existing_ticket_numbers.add(row[0])
 
 current_username = ""
@@ -56,7 +53,7 @@ def open_dashboard():
         name = selected_row[2]
         description = selected_row[3]
         reporter = selected_row[4]
-        status = selected_row[5]
+        status = selected_row[5]  # Assuming the status column is the 6th column in the CSV
 
         details_label = tk.Label(ticket_window, text=f"Ticket Number: {ticket_number}\nSupport Type: {support_type}\nName: {name}\nDescription: {description}\nReporter: {reporter}\nStatus: {status}")
         details_label.pack()
@@ -65,23 +62,23 @@ def open_dashboard():
             edit_window = tk.Toplevel(ticket_window)
             edit_window.title("Edit Ticket")
 
-            tk.Label(edit_window, text="Ticket Number: " + str(ticket_number)).pack()
+            tk.Label(edit_window, text="Ticket Number: " + str(ticket_number)).pack()  # Convert to string
 
             tk.Label(edit_window, text="Support Type").pack()
             support_type_var = tk.StringVar()
             support_type_combobox = ttk.Combobox(edit_window, textvariable=support_type_var, state="readonly")
             support_type_combobox['values'] = ("Classroom", "General", "Software", "Hardware", "Other")
-            support_type_combobox.set(support_type)
+            support_type_combobox.set(support_type)  # Set the current support type
             support_type_combobox.pack()
 
             tk.Label(edit_window, text="Name").pack()
             name_entry = tk.Entry(edit_window)
-            name_entry.insert(0, name)
+            name_entry.insert(0, name)  # Set the current name
             name_entry.pack()
 
             tk.Label(edit_window, text="Description").pack()
             description_entry = tk.Entry(edit_window)
-            description_entry.insert(0, description)
+            description_entry.insert(0, description)  # Set the current description
             description_entry.pack()
 
             def save_changes():
@@ -89,44 +86,29 @@ def open_dashboard():
                 edited_name = name_entry.get()
                 edited_description = description_entry.get()
 
-                for row in tickets_data:
-                    if row[0] == ticket_number:
-                        row[1] = edited_support_type
-                        row[2] = edited_name
-                        row[3] = edited_description
-                        break
+                # Update the ticket data in the CSV file
+                with open("GroupProject3/files/tickets.csv", 'r', newline='') as file:
+                    rows = list(csv.reader(file))
+                    for row in rows:
+                        if row[0] == ticket_number:
+                            row[1] = edited_support_type
+                            row[2] = edited_name
+                            row[3] = edited_description
+                            break
 
-                refresh_treeview()
+                with open("GroupProject3/files/tickets.csv", 'w', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerows(rows)
 
                 edit_window.destroy()
                 details_label.config(text=f"Ticket Number: {ticket_number}\nSupport Type: {edited_support_type}\nName: {edited_name}\nDescription: {edited_description}\nReporter: {reporter}\nStatus: {status}")
+                refresh_treeview()
 
             save_button = tk.Button(edit_window, text="Save", command=save_changes)
             save_button.pack()
 
         edit_button = tk.Button(ticket_window, text="Edit", command=edit_ticket)
         edit_button.pack()
-
-        def change_status():
-            nonlocal status
-            if status == "True":
-                status = "False"
-                status_button.config(text="Reopen Ticket")
-            else:
-                status = "True"
-                status_button.config(text="Close Ticket")
-
-            for row in tickets_data:
-                if row[0] == ticket_number:
-                    row[5] = status
-                    break
-
-            refresh_treeview()
-            details_label.config(text=f"Ticket Number: {ticket_number}\nSupport Type: {support_type}\nName: {name}\nDescription: {description}\nReporter: {reporter}\nStatus: {status}")
-
-        status_button_text = "Reopen Ticket" if status == "False" else "Close Ticket"
-        status_button = tk.Button(ticket_window, text=status_button_text, command=change_status)
-        status_button.pack()
 
     def create_new_ticket():
         new_ticket_window = tk.Toplevel(dashboard_window)
@@ -156,10 +138,11 @@ def open_dashboard():
             support_type = support_type_var.get()
             name = name_entry.get()
             description = description_entry.get()
+            status = "True"  # Default status is True
 
             with open("GroupProject3/files/tickets.csv", 'a', newline='') as file:
                 writer = csv.writer(file)
-                writer.writerow([new_ticket_number, support_type, name, description, current_username, "True"])
+                writer.writerow([new_ticket_number, support_type, name, description, current_username, status])
 
             new_ticket_window.destroy()
             refresh_treeview()
@@ -177,12 +160,15 @@ def open_dashboard():
 
         def search():
             ticket_number = search_entry.get()
-            for row in tickets_data:
-                if row[0] == ticket_number:
-                    ticket_data = row
-                    open_ticket_window(ticket_data)
-                    search_window.destroy()
-                    return
+            with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
+                reader = csv.reader(csvfile)
+                next(reader)
+                for row in reader:
+                    if row[0] == ticket_number:
+                        ticket_data = row
+                        open_ticket_window(ticket_data)
+                        search_window.destroy()
+                        return
             messagebox.showerror("Ticket Not Found", "Ticket not found for the entered number.")
 
         search_button = tk.Button(search_window, text="Search", command=search)
@@ -192,31 +178,28 @@ def open_dashboard():
         for row in table.get_children():
             table.delete(row)
 
-        for row in tickets_data:
-            if row[5] == "True":
+        with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            next(reader)  # Skip the header row
+            for row in reader:
                 table.insert("", "end", values=row)
-
-    def open_ticket_dashboard(selected_row):
-        ticket_window = tk.Toplevel(dashboard_window)
-        ticket_window.title("Ticket Details")
-        ticket_number, support_type, name, description, reporter, status = selected_row
-
-        details_label = tk.Label(ticket_window, text=f"Ticket Number: {ticket_number}\nSupport Type: {support_type}\nName: {name}\nDescription: {description}\nReporter: {reporter}\n")
-        details_label.pack()
 
     def on_double_click(event):
         item = table.selection()[0]
-        open_ticket_dashboard(table.item(item)["values"])
+        open_ticket_window(table.item(item)["values"])
 
-    table = ttk.Treeview(dashboard_window, columns=("Ticket Number", "Support Type", "Name", "Description", "Reporter"))
+    table = ttk.Treeview(dashboard_window, columns=("Ticket Number", "Support Type", "Name", "Description", "Reporter", "Status"))
     table.heading("#1", text="Ticket Number")
     table.heading("#2", text="Support Type")
     table.heading("#3", text="Name")
     table.heading("#4", text="Description")
     table.heading("#5", text="Reporter")
+    table.heading("#6", text="Status")
 
-    for row in tickets_data:
-        if row[5] == "True":
+    with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)  # Skip the header row
+        for row in reader:
             table.insert("", "end", values=row)
 
     new_ticket_button = tk.Button(dashboard_window, text="New Ticket", command=create_new_ticket)
@@ -246,3 +229,4 @@ password_entry.grid(row=1, column=1, padx=10, pady=10)
 login_button.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 
 login_window.mainloop()
+
