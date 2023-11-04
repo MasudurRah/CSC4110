@@ -1,3 +1,5 @@
 Ticket Number,Support Type,Name,Description,Reporter
-19895,Software,John,Mic doest work,ok
-54717,General,Bob,Table broke,ok
+19895,Software,John,Mic doest work,ok,True
+54717,General,Bob,Table broke,ok,False
+63289,Software,123,321,mas,True
+48113,Software,21,21,hamam,True
