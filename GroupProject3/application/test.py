@@ -76,7 +76,7 @@ def open_dashboard():
     dashboard_window.configure(padx=20, pady=20)
 
     # Load and display the logo on the dashboard page (with smaller size)
-    dashboard_logo_image = tk.PhotoImage(file="GroupProject3/files/logoo.png").subsample(2, 2) 
+    dashboard_logo_image = tk.PhotoImage(file="GroupProject3/files/redlogo.png").subsample(2, 2) 
     dashboard_logo_label = tk.Label(dashboard_window, image=dashboard_logo_image)
     dashboard_logo_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))  # Add some space below the logo
 
@@ -337,7 +337,7 @@ login_window.geometry("400x300")
 login_window.configure(padx=20, pady=20)
 
 # Load and display the logo on the login page (with smaller size)
-login_logo_image = tk.PhotoImage(file="GroupProject3/files/logoo.png").subsample(2, 2)  
+login_logo_image = tk.PhotoImage(file="GroupProject3/files/redlogo.png").subsample(2, 2)  
 login_logo_label = tk.Label(login_window, image=login_logo_image)
 login_logo_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))  # Add some space below the logo
 
