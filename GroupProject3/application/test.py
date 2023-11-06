@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import csv
 import random
+import json
+import re
 
 def check_credentials(username, password):
     with open("GroupProject3/files/user_credentials.csv", newline='') as csvfile:
@@ -39,6 +41,31 @@ def login():
         open_dashboard()
     else:
         messagebox.showerror("Incorrect Login", "Invalid username or password")
+
+def convert_to_json():
+    json_filename = "GroupProject3/files/tickets.json"
+    ticket_data = []
+
+    with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader)  # Skip the header row
+        for row in reader:
+            if row[5] == "True":
+                ticket = {
+                    "Ticket Number": row[0],
+                    "Support Type": row[1],
+                    "Name": row[2],
+                    "Description": row[3],
+                    "Reporter": row[4],
+                    "Status": row[5]
+                }
+                ticket_data.append(ticket)
+
+    with open(json_filename, 'w') as json_file:
+        json.dump(ticket_data, json_file, indent=4)
+
+    messagebox.showinfo("JSON Conversion", "Data has been converted to JSON")
+
 
 def open_dashboard():
     dashboard_window = tk.Tk()
@@ -114,10 +141,24 @@ def open_dashboard():
             description_entry.insert(0, description)  # Set the current description
             description_entry.pack()
 
+            def validate_name_input(name):
+                return re.match("^[A-Za-z]*$", name) and bool(name)
+
+            def validate_desc_input(desc):
+                return bool(desc)
+
             def save_changes():
                 edited_support_type = support_type_var.get()
                 edited_name = name_entry.get()
                 edited_description = description_entry.get()
+
+                if not validate_name_input(edited_name):
+                    messagebox.showerror("Invalid Input", "Name should only contain letters (no special characters or numbers).")
+                    return
+
+                if not validate_desc_input(edited_description):
+                    messagebox.showerror("Invalid Input", "Description must not be empty.")
+                    return
 
                 # Update the ticket data in the CSV file
                 with open("GroupProject3/files/tickets.csv", 'r', newline='') as file:
@@ -142,7 +183,7 @@ def open_dashboard():
 
         edit_button = tk.Button(ticket_window, text="Edit", command=edit_ticket)
         edit_button.pack()
-
+    
     def create_new_ticket():
         new_ticket_window = tk.Toplevel(dashboard_window)
         new_ticket_window.title("Create New Ticket")
@@ -167,10 +208,26 @@ def open_dashboard():
         reporter_label = tk.Label(new_ticket_window, text="Reporter: " + current_username)
         reporter_label.pack()
 
+        def validate_name_input(name):
+            return re.match("^[A-Za-z]*$", name) and bool(name)
+        
+        def validate_desc_input(desc):
+            return bool(desc)
+
         def save_new_ticket():
             support_type = support_type_var.get()
+            if not support_type:
+                messagebox.showerror("Invalid Input", "Please select a Support Type.")
+                return
             name = name_entry.get()
+            if not validate_name_input(name):
+                messagebox.showerror("Invalid Input", "Name should only contain letters (no special characters or numbers).")
+                return
+
             description = description_entry.get()
+            if not validate_desc_input(description):
+                messagebox.showerror("Invalid Input", "Description must not be empty.")
+                return
             status = "True"  # Default status is True
 
             with open("GroupProject3/files/tickets.csv", 'a', newline='') as file:
@@ -191,8 +248,15 @@ def open_dashboard():
         search_entry = tk.Entry(search_window)
         search_entry.pack()
 
+        def validate_search_input(ticket_number):
+            return re.match("^[0-9]+$", ticket_number) is not None
+
         def search():
             ticket_number = search_entry.get()
+            if not validate_search_input(ticket_number):
+                messagebox.showerror("Invalid Input", "Ticket number should only contain numbers.")
+                return
+
             with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
                 reader = csv.reader(csvfile)
                 next(reader)
@@ -253,6 +317,12 @@ def open_dashboard():
 
     search_button = tk.Button(dashboard_window, text="Search Ticket", command=search_ticket)
     search_button.grid(row=2, column=1, pady=10)  # Use grid instead of pack
+
+    convert_to_json_button = tk.Button(dashboard_window, text="Convert To JSON", command=convert_to_json)
+    convert_to_json_button.grid(row=2, column=0, columnspan=2, pady=10)
+
+    #logout = tk.Button(dashboard_window, text="logout", command=logout)
+    #logout.grid(row=3, column=0, columnspan=2, pady=10)
 
     table.bind("<Double-1>", on_double_click)
 
