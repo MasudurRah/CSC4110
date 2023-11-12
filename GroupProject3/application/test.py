@@ -5,10 +5,12 @@ import random
 import json
 import re
 
+IMAGE_PATH = "GroupProject3/files/redlogo.png"
+
 def check_credentials(username, password):
     with open("GroupProject3/files/user_credentials.csv", newline='') as csvfile:
         reader = csv.reader(csvfile)
-        next(reader)  # Skip the header row
+        next(reader)
         for row in reader:
             if row and len(row) >= 2 and row[0] == username and row[1] == password:
                 return True
@@ -24,19 +26,19 @@ def generate_unique_ticket_number(existing_ticket_numbers):
 existing_ticket_numbers = set()
 with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
     reader = csv.reader(csvfile)
-    next(reader)  # Skip the header row
+    next(reader)
     for row in reader:
         existing_ticket_numbers.add(row[0])
 
 current_username = ""
 
 def login():
-    global current_username  # Use the global variable
+    global current_username
     entered_username = username_entry.get()
     entered_password = password_entry.get()
 
     if check_credentials(entered_username, entered_password):
-        current_username = entered_username  # Update the logged-in username
+        current_username = entered_username
         login_window.destroy()
         open_dashboard()
     else:
@@ -71,14 +73,42 @@ def open_dashboard():
     dashboard_window = tk.Tk()
     dashboard_window.title("Dashboard")
 
-    # Add padding to the dashboard window
     dashboard_window.geometry("1250x500")
     dashboard_window.configure(padx=20, pady=20)
 
-    # Load and display the logo on the dashboard page (with smaller size)
     dashboard_logo_image = tk.PhotoImage(file="GroupProject3/files/redlogo.png").subsample(2, 2) 
     dashboard_logo_label = tk.Label(dashboard_window, image=dashboard_logo_image)
-    dashboard_logo_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))  # Add some space below the logo
+    dashboard_logo_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
+
+    def create_login_window():
+        global login_window
+        login_window = tk.Tk()
+        login_window.title("Login")
+
+        login_window.geometry("370x270")
+        login_window.configure(padx=20, pady=20)
+
+        logout_label = tk.Label(login_window, text="You have successfully logged out.")
+        logout_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
+
+        global username_entry, password_entry
+
+        username_label = tk.Label(login_window, text="Username:")
+        username_entry = tk.Entry(login_window)
+        password_label = tk.Label(login_window, text="Password:")
+        password_entry = tk.Entry(login_window, show="*")
+
+        login_button = tk.Button(login_window, text="Login", command=login)
+
+        username_label.grid(row=1, column=0, padx=10, pady=10)
+        username_entry.grid(row=1, column=1, padx=10, pady=10)
+        password_label.grid(row=2, column=0, padx=10, pady=10)
+        password_entry.grid(row=2, column=1, padx=10, pady=10)
+        login_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
+
+    def logout():
+        dashboard_window.destroy()
+        create_login_window()
 
     def open_ticket_window(selected_row):
         ticket_window = tk.Toplevel(dashboard_window)
@@ -88,7 +118,7 @@ def open_dashboard():
         name = selected_row[2]
         description = selected_row[3]
         reporter = selected_row[4]
-        status = selected_row[5]  # Assuming the status column is the 6th column in the CSV
+        status = selected_row[5]
 
         def toggle_ticket_status():
             nonlocal status
@@ -97,12 +127,11 @@ def open_dashboard():
             else:
                 status = "True"
 
-            # Update the ticket data in the CSV file
             with open("GroupProject3/files/tickets.csv", 'r', newline='') as file:
                 rows = list(csv.reader(file))
                 for row in rows:
                     if row[0] == ticket_number:
-                        row[5] = status  # Update the status
+                        row[5] = status
                         break
 
             with open("GroupProject3/files/tickets.csv", 'w', newline='') as file:
@@ -122,27 +151,27 @@ def open_dashboard():
             edit_window = tk.Toplevel(ticket_window)
             edit_window.title("Edit Ticket")
 
-            tk.Label(edit_window, text="Ticket Number: " + str(ticket_number)).pack()  # Convert to string
+            tk.Label(edit_window, text="Ticket Number: " + str(ticket_number)).pack()
 
             tk.Label(edit_window, text="Support Type").pack()
             support_type_var = tk.StringVar()
             support_type_combobox = ttk.Combobox(edit_window, textvariable=support_type_var, state="readonly")
             support_type_combobox['values'] = ("Classroom", "General", "Software", "Hardware", "Other")
-            support_type_combobox.set(support_type)  # Set the current support type
+            support_type_combobox.set(support_type)
             support_type_combobox.pack()
 
             tk.Label(edit_window, text="Name").pack()
             name_entry = tk.Entry(edit_window)
-            name_entry.insert(0, name)  # Set the current name
+            name_entry.insert(0, name)
             name_entry.pack()
 
             tk.Label(edit_window, text="Description").pack()
             description_entry = tk.Entry(edit_window)
-            description_entry.insert(0, description)  # Set the current description
+            description_entry.insert(0, description)
             description_entry.pack()
 
             def validate_name_input(name):
-                return re.match("^[A-Za-z]*$", name) and bool(name)
+                return re.match("^[A-Za-z\s]*$", name) and bool(name)
 
             def validate_desc_input(desc):
                 return bool(desc)
@@ -160,7 +189,6 @@ def open_dashboard():
                     messagebox.showerror("Invalid Input", "Description must not be empty.")
                     return
 
-                # Update the ticket data in the CSV file
                 with open("GroupProject3/files/tickets.csv", 'r', newline='') as file:
                     rows = list(csv.reader(file))
                     for row in rows:
@@ -209,7 +237,7 @@ def open_dashboard():
         reporter_label.pack()
 
         def validate_name_input(name):
-            return re.match("^[A-Za-z]*$", name) and bool(name)
+            return re.match("^[A-Za-z\s]*$", name) and bool(name)
         
         def validate_desc_input(desc):
             return bool(desc)
@@ -277,9 +305,8 @@ def open_dashboard():
 
         with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
             reader = csv.reader(csvfile)
-            next(reader)  # Skip the header row
+            next(reader)
             for row in reader:
-                # Only add rows with "True" status to the table
                 if row[5] == "True":
                     table.insert("", "end", values=row)
 
@@ -304,42 +331,38 @@ def open_dashboard():
 
     with open("GroupProject3/files/tickets.csv", newline='') as csvfile:
         reader = csv.reader(csvfile)
-        next(reader)  # Skip the header row
+        next(reader)
         for row in reader:
-            # Only add rows with "True" status to the table
             if row[5] == "True":
                 table.insert("", "end", values=row)
 
-    table.grid(row=1, column=0, columnspan=2, pady=10)  # Use grid instead of pack
+    table.grid(row=1, column=0, columnspan=2, pady=10)
 
     new_ticket_button = tk.Button(dashboard_window, text="New Ticket", command=create_new_ticket)
-    new_ticket_button.grid(row=2, column=0, pady=10)  # Use grid instead of pack
+    new_ticket_button.grid(row=2, column=0, pady=10)
 
     search_button = tk.Button(dashboard_window, text="Search Ticket", command=search_ticket)
-    search_button.grid(row=2, column=1, pady=10)  # Use grid instead of pack
+    search_button.grid(row=2, column=1, pady=10)
 
     convert_to_json_button = tk.Button(dashboard_window, text="Convert To JSON", command=convert_to_json)
     convert_to_json_button.grid(row=2, column=0, columnspan=2, pady=10)
 
-    #logout = tk.Button(dashboard_window, text="logout", command=logout)
-    #logout.grid(row=3, column=0, columnspan=2, pady=10)
+    logout = tk.Button(dashboard_window, text="Close Dashboard", command=logout)
+    logout.grid(row=3, column=0, columnspan=2, pady=10)
 
     table.bind("<Double-1>", on_double_click)
 
     dashboard_window.mainloop()
 
-# Create the main login window
 login_window = tk.Tk()
 login_window.title("Login")
 
-# Add padding to the login window
-login_window.geometry("400x300")
+login_window.geometry("370x300")
 login_window.configure(padx=20, pady=20)
 
-# Load and display the logo on the login page (with smaller size)
 login_logo_image = tk.PhotoImage(file="GroupProject3/files/redlogo.png").subsample(2, 2)  
 login_logo_label = tk.Label(login_window, image=login_logo_image)
-login_logo_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))  # Add some space below the logo
+login_logo_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
 
 username_label = tk.Label(login_window, text="Username:")
 username_entry = tk.Entry(login_window)
