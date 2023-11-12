@@ -1,3 +1,4 @@
+"""Modules to import tkinter, csv, json, and re functionality"""
 import tkinter as tk
 from tkinter import ttk, messagebox
 import csv
@@ -8,6 +9,7 @@ import re
 IMAGE_PATH = "GroupProject3/files/redlogo.png"
 
 def check_credentials(username, password):
+    """It checks credentials"""
     with open("GroupProject3/files/user_credentials.csv", newline='', encoding="utf-8") as csvfile:
         reader = csv.reader(csvfile)
         next(reader)
@@ -17,6 +19,7 @@ def check_credentials(username, password):
     return False
 
 def generate_unique_ticket_number(existing_ticket_numbers):
+    """It generates ticket number"""
     while True:
         new_ticket_number = str(random.randint(10000, 99999))
         if new_ticket_number not in existing_ticket_numbers:
@@ -30,27 +33,29 @@ with open("GroupProject3/files/tickets.csv", newline='', encoding="utf-8") as cs
     for row in reader:
         existing_ticket_numbers.add(row[0])
 
-current_username = ""
+CURRENT_USERNAME = ""
 
 def login():
-    global current_username
+    """Function for login window that uses your credentials"""
+    global CURRENT_USERNAME
     entered_username = username_entry.get()
     entered_password = password_entry.get()
 
     if check_credentials(entered_username, entered_password):
-        current_username = entered_username
+        CURRENT_USERNAME = entered_username
         login_window.destroy()
         open_dashboard()
     else:
         messagebox.showerror("Incorrect Login", "Invalid username or password")
 
 def convert_to_json():
+    """Converts tickets to json"""
     json_filename = "GroupProject3/files/tickets.json"
     ticket_data = []
 
     with open("GroupProject3/files/tickets.csv", newline='', encoding="utf-8") as csvfile:
         reader = csv.reader(csvfile)
-        next(reader)  # Skip the header row
+        next(reader)
         for row in reader:
             if row[5] == "True":
                 ticket = {
@@ -70,6 +75,7 @@ def convert_to_json():
 
 
 def open_dashboard():
+    """Opens the main dashboard to view tickets"""
     dashboard_window = tk.Tk()
     dashboard_window.title("Dashboard")
 
@@ -81,6 +87,7 @@ def open_dashboard():
     dashboard_logo_label.grid(row=0, column=0, columnspan=2, pady=(0, 20))
 
     def create_login_window():
+        """This creates the logout window"""
         global login_window
         login_window = tk.Tk()
         login_window.title("Login")
@@ -107,10 +114,12 @@ def open_dashboard():
         login_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
     def logout():
+        """Logout functionality"""
         dashboard_window.destroy()
         create_login_window()
 
     def open_ticket_window(selected_row):
+        """Shows you details of the ticket"""
         ticket_window = tk.Toplevel(dashboard_window)
         ticket_window.title("Ticket Details")
         ticket_number = selected_row[0]
@@ -121,6 +130,7 @@ def open_dashboard():
         status = selected_row[5]
 
         def toggle_ticket_status():
+            """Lets you open or close ticket"""
             nonlocal status
             if status == "True":
                 status = "False"
@@ -160,6 +170,7 @@ def open_dashboard():
         toggle_button.pack()
 
         def edit_ticket():
+            """Allows you to edit ticket"""
             edit_window = tk.Toplevel(ticket_window)
             edit_window.title("Edit Ticket")
 
@@ -185,12 +196,15 @@ def open_dashboard():
             description_entry.pack()
 
             def validate_name_input(name):
+                """Validates name input"""
                 return re.match("^[A-Za-z\s]*$", name) and bool(name)
 
             def validate_desc_input(desc):
+                """Validates desc input"""
                 return bool(desc)
 
             def save_changes():
+                """Saves changes"""
                 edited_support_type = support_type_var.get()
                 edited_name = name_entry.get()
                 edited_description = description_entry.get()
@@ -204,7 +218,8 @@ def open_dashboard():
                     messagebox.showerror("Invalid Input", "Description must not be empty.")
                     return
 
-                with open("GroupProject3/files/tickets.csv", 'r', newline='', encoding="utf-8") as file:
+                with open("GroupProject3/files/tickets.csv", 'r', newline='',\
+                           encoding="utf-8") as file:
                     rows = list(csv.reader(file))
                     for row in rows:
                         if row[0] == ticket_number:
@@ -213,7 +228,8 @@ def open_dashboard():
                             row[3] = edited_description
                             break
 
-                with open("GroupProject3/files/tickets.csv", 'w', newline='', encoding="utf-8") as file:
+                with open("GroupProject3/files/tickets.csv", 'w', newline='',\
+                           encoding="utf-8") as file:
                     writer = csv.writer(file)
                     writer.writerows(rows)
 
@@ -235,9 +251,10 @@ def open_dashboard():
         edit_button.pack()
 
     def create_new_ticket():
+        """Function to create a new ticket"""
         new_ticket_window = tk.Toplevel(dashboard_window)
         new_ticket_window.title("Create New Ticket")
-        new_ticket_window.geometry("200x200")  # Set window size
+        new_ticket_window.geometry("200x200")
 
         new_ticket_number = generate_unique_ticket_number(existing_ticket_numbers)
         tk.Label(new_ticket_window, text="Ticket Number: " + new_ticket_number).pack()
@@ -257,16 +274,19 @@ def open_dashboard():
         description_entry = tk.Entry(new_ticket_window)
         description_entry.pack()
 
-        reporter_label = tk.Label(new_ticket_window, text="Reporter: " + current_username)
+        reporter_label = tk.Label(new_ticket_window, text="Reporter: " + CURRENT_USERNAME)
         reporter_label.pack()
 
         def validate_name_input(name):
+            """Validates name input"""
             return re.match("^[A-Za-z\s]*$", name) and bool(name)
 
         def validate_desc_input(desc):
+            """Validates desc input"""
             return bool(desc)
 
         def save_new_ticket():
+            """Saves new ticket"""
             support_type = support_type_var.get()
             if not support_type:
                 messagebox.showerror("Invalid Input", "Please select a Support Type.")
@@ -281,12 +301,12 @@ def open_dashboard():
             if not validate_desc_input(description):
                 messagebox.showerror("Invalid Input", "Description must not be empty.")
                 return
-            status = "True"  # Default status is True
+            status = "True"
 
             with open("GroupProject3/files/tickets.csv", 'a', newline='', encoding="utf-8") as file:
                 writer = csv.writer(file)
                 writer.writerow([new_ticket_number, support_type, \
-                name, description, current_username, status])
+                name, description, CURRENT_USERNAME, status])
 
             new_ticket_window.destroy()
             refresh_treeview()
@@ -296,6 +316,7 @@ def open_dashboard():
         save_button.pack()
 
     def search_ticket():
+        """Function to search tickets"""
         search_window = tk.Toplevel(dashboard_window)
         search_window.title("Search Ticket")
         search_window.geometry("150x100")
@@ -304,9 +325,11 @@ def open_dashboard():
         search_entry.pack()
 
         def validate_search_input(ticket_number):
+            """Validates search input"""
             return re.match("^[0-9]+$", ticket_number) is not None
 
         def search():
+            """Function to search tickets"""
             ticket_number = search_entry.get()
             if not validate_search_input(ticket_number):
                 messagebox.showerror("Invalid Input", "Ticket number should only contain numbers.")
@@ -327,6 +350,7 @@ def open_dashboard():
         search_button.pack()
 
     def refresh_treeview():
+        """Refreshes the dashboard"""
         for row in table.get_children():
             table.delete(row)
 
@@ -338,11 +362,11 @@ def open_dashboard():
                     table.insert("", "end", values=row)
 
     def open_ticket_dashboard(selected_row):
+        """Opens the ticket dashboard"""
         ticket_window = tk.Toplevel(dashboard_window)
         ticket_window.title("Ticket Details")
         ticket_number, support_type, name, description, reporter, status = selected_row
 
-        # Increase font size
         details_text = (
             f"Ticket Number: {ticket_number}\n"
             f"Support Type: {support_type}\n"
@@ -353,30 +377,25 @@ def open_dashboard():
         )
 
         details_label = tk.Label(ticket_window, text=details_text, font=("Arial", 12))
-        details_label.pack(pady=10, padx=10)  # Adding padding for spacing
+        details_label.pack(pady=10, padx=10)
 
-        # Force an update to get the actual size of the label
         ticket_window.update_idletasks()
 
-        # Calculate the initial width based on the length of the longest line
         max_line_length = max(len(line) for line in details_text.split('\n'))
-        initial_width = max_line_length * 10  # Adjust the multiplier as needed
+        initial_width = max_line_length * 10
 
-        # Set an initial window size to accommodate the text
         initial_height = 150
 
-        # Get the screen width and height
         screen_width = ticket_window.winfo_screenwidth()
         screen_height = ticket_window.winfo_screenheight()
 
-        # Calculate the x and y coordinates for the window
-        x = (screen_width - initial_width) // 2
-        y = (screen_height - initial_height) // 2
+        x_value = (screen_width - initial_width) // 2
+        y_value = (screen_height - initial_height) // 2
 
-        # Set the dimensions of the window and its position
-        ticket_window.geometry(f'{initial_width}x{initial_height}+{x}+{y}')
+        ticket_window.geometry(f'{initial_width}x{initial_height}+{x_value}+{y_value}')
 
     def on_double_click(event):
+        """Opens ticket when double clicked"""
         item = table.selection()[0]
         open_ticket_dashboard(table.item(item)["values"])
 
