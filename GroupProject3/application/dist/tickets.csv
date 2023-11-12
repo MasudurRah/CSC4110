@@ -1,7 +1,7 @@
 Ticket Number,Support Type,Name,Description,Reporter,Status
-19895,Software,Mike,Mic doest work,D,True
-54717,General,BobMartin,Testing,AR,True
-76246,Software,mas,12122,mas,True
-45363,Software,mas,111,mas,False
-28728,Classroom,Hamam N,im not sure what the issue is,hamam,True
-22290,General,Bob Ross,hello world,hamam,True
+19895,Software,Mike,Mic doest work,D,TRUE
+54717,General,BobMartin,Testing,AR,TRUE
+76246,Software,mas,12122,mas,TRUE
+45363,Software,mas,111,mas,FALSE
+28728,Classroom,Hamam N,im not sure what the issue is,hamam,TRUE
+22290,General,Bob Ross,hello world,hamam,TRUE
