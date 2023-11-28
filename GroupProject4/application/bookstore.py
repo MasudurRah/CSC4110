@@ -5,8 +5,9 @@ import csv
 import re
 import random
 
+img = None
+
 def customer_login():
-    print("Customer Login Button Clicked")
     open_customer_login_window()
 
 def open_customer_login_window():
@@ -157,18 +158,20 @@ def register_customer(username, password, email, address, zipcode, city, state, 
     open_blank_window("Registration Successful")
 
 def open_blank_window(title):
+    global img  # Declare img as a global variable
     # Open a new blank window with two rows of three buttons each
     blank_window = tk.Toplevel(root)
     blank_window.title(title)
     blank_window.geometry("600x400")
 
+    # Add a label for Best Sellers
+    best_sellers_label = tk.Label(blank_window, text="Best Sellers", font=("Helvetica", 16, "bold"))
+    best_sellers_label.pack(pady=10)
+
     # Add the image label at the top middle
     if img:
         image_label = tk.Label(blank_window, image=img)
         image_label.pack(pady=10)
-
-    best_sellers_label = tk.Label(blank_window, text="Best Sellers", font=("Helvetica", 16, "bold"))
-    best_sellers_label.pack(pady=10)
 
     # Create the first row of buttons
     button_frame_row1 = tk.Frame(blank_window)
@@ -202,6 +205,9 @@ def open_blank_window(title):
 
     cart_button = tk.Button(blank_window, text="Cart", command=open_cart_window)
     cart_button.pack(side=tk.LEFT, padx=10)
+
+    logout_button = tk.Button(blank_window, text="Logout", command=lambda: [blank_window.destroy(), customer_login()])
+    logout_button.pack(pady=10)
 
 def open_cart_window():
     # Open the cart window to view items
@@ -331,11 +337,11 @@ def apply_filter(column_name, filter_value):
                     # Display the book image on the left side of the window
                     image_path = f"GroupProject4/files/{selected_row['Book Name']}.png"
                     try:
-                        global img  # Declare img as a global variable
-                        img = PhotoImage(file=image_path)
-                        img = img.subsample(3)  # Adjust the subsample factor as needed
-                        image_label = tk.Label(details_window, image=img)
+                        img_local = PhotoImage(file=image_path)
+                        img_local = img_local.subsample(3)  # Adjust the subsample factor as needed
+                        image_label = tk.Label(details_window, image=img_local)
                         image_label.grid(row=0, column=0, rowspan=4, padx=10, pady=10)
+                        image_label.image = img_local  # Keep a reference to the image to prevent garbage collection
                     except tk.TclError:
                         print(f"Error: Image file '{image_path}' not found.")
 
@@ -373,11 +379,11 @@ def apply_filter(column_name, filter_value):
             # Display the book image on the left side of the window
             image_path = f"GroupProject4/files/{row['Book Name']}.png"
             try:
-                global img  # Declare img as a global variable
-                img = PhotoImage(file=image_path)
-                img = img.subsample(3)  # Adjust the subsample factor as needed
-                image_label = tk.Label(details_window, image=img)
+                img_local = PhotoImage(file=image_path)
+                img_local = img_local.subsample(3)  # Adjust the subsample factor as needed
+                image_label = tk.Label(details_window, image=img_local)
                 image_label.grid(row=0, column=0, rowspan=4, padx=10, pady=10)
+                image_label.image = img_local  # Keep a reference to the image to prevent garbage collection
             except tk.TclError:
                 print(f"Error: Image file '{image_path}' not found.")
 
