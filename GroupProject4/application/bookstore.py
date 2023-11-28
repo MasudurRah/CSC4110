@@ -167,6 +167,9 @@ def open_blank_window(title):
         image_label = tk.Label(blank_window, image=img)
         image_label.pack(pady=10)
 
+    best_sellers_label = tk.Label(blank_window, text="Best Sellers", font=("Helvetica", 16, "bold"))
+    best_sellers_label.pack(pady=10)
+
     # Create the first row of buttons
     button_frame_row1 = tk.Frame(blank_window)
     button_frame_row1.pack(pady=10)
@@ -188,22 +191,9 @@ def open_blank_window(title):
     with open("GroupProject4/files/books.csv", "r") as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
-            if i >= 3 and i < 6:
+            if 3 <= i < 6:
                 button_text = f"{row['Book Name']}\n{row['Genre']}\n{row['Author']}"
                 button = tk.Button(button_frame_row2, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]))
-                button.pack(side=tk.LEFT, padx=10)
-
-    # Create the third row of buttons
-    button_frame_row3 = tk.Frame(blank_window)
-    button_frame_row3.pack(pady=10)
-
-    # Read the CSV file and create buttons for the next three rows
-    with open("GroupProject4/files/books.csv", "r") as file:
-        reader = csv.DictReader(file)
-        for i, row in enumerate(reader):
-            if i >= 6 and i < 9:
-                button_text = f"{row['Book Name']}\n{row['Genre']}\n{row['Author']}"
-                button = tk.Button(button_frame_row3, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]))
                 button.pack(side=tk.LEFT, padx=10)
 
     # Add a search button on the left-hand side
@@ -309,43 +299,107 @@ def apply_filter(column_name, filter_value):
             if row[column_name] == filter_value:
                 matching_rows.append(row)
 
-    # Open a new window for each matching row
-    for row in matching_rows:
-        details_window = tk.Toplevel(root)
-        details_window.title("Row Details")
-        details_window.geometry("700x300")
+    # Check if there are multiple books with the same author or genre
+    if len(matching_rows) > 1:
+        # Create a new window to display book titles
+        title_selection_window = tk.Toplevel(root)
+        title_selection_window.title("Select Book Title")
+        title_selection_window.geometry("400x300")
 
-        # Display the book image on the left side of the window
-        image_path = f"GroupProject4/files/{row['Book Name']}.png"
+        # Create a listbox to display book titles
+        title_listbox = tk.Listbox(title_selection_window, selectmode=tk.MULTIPLE)
+        title_listbox.pack(pady=10)
 
-        try:
-            global img  # Declare img as a global variable
-            img = PhotoImage(file=image_path)
-            img = img.subsample(3)  # Adjust the subsample factor as needed
-            image_label = tk.Label(details_window, image=img)
-            image_label.grid(row=0, column=0, rowspan=4, padx=10, pady=10)
-        except tk.TclError:
-            print(f"Error: Image file '{image_path}' not found.")
+        # Add book titles to the listbox
+        for row in matching_rows:
+            title_listbox.insert(tk.END, row['Book Name'])
 
-        # Display the details in labels
-        tk.Label(details_window, text=f"Book Title: {row['Book Name']}").grid(row=0, column=1, pady=5, sticky=tk.W)
-        tk.Label(details_window, text=f"Author: {row['Author']}").grid(row=1, column=1, pady=5, sticky=tk.W)
-        tk.Label(details_window, text=f"Price: ${row['Price']}").grid(row=2, column=1, pady=5, sticky=tk.W)
+        # Function to apply filter when titles are selected
+        def apply_filter_on_titles():
+            selected_titles = title_listbox.curselection()
+            for index in selected_titles:
+                selected_title = title_listbox.get(index)
+                # Open a new window for each selected title
+                details_window = tk.Toplevel(root)
+                details_window.title("Row Details")
+                details_window.geometry("700x300")
 
-        # Get and display the amount of inventory
-        inventory_label = tk.Label(details_window, text=f"Inventory: {row['Inventory']}")
-        inventory_label.grid(row=3, column=1, pady=5, sticky=tk.W)
+                # Find the selected title in matching rows
+                selected_row = next((row for row in matching_rows if row['Book Name'] == selected_title), None)
 
-        # Add "Buy" and "Sell" buttons
-        if int(row['Inventory']) > 0:
-            buy_button = tk.Button(details_window, text="Buy", command=lambda name=row['Book Name']: buy_book(name, details_window))
-        else:
-            buy_button = tk.Button(details_window, text="Sold Out", state=tk.DISABLED)
+                if selected_row:
+                    # Display the book image on the left side of the window
+                    image_path = f"GroupProject4/files/{selected_row['Book Name']}.png"
+                    try:
+                        global img  # Declare img as a global variable
+                        img = PhotoImage(file=image_path)
+                        img = img.subsample(3)  # Adjust the subsample factor as needed
+                        image_label = tk.Label(details_window, image=img)
+                        image_label.grid(row=0, column=0, rowspan=4, padx=10, pady=10)
+                    except tk.TclError:
+                        print(f"Error: Image file '{image_path}' not found.")
 
-        sell_button = tk.Button(details_window, text="Sell", command=sell_book)
+                    # Display the details in labels
+                    tk.Label(details_window, text=f"Book Title: {selected_row['Book Name']}").grid(row=0, column=1, pady=5, sticky=tk.W)
+                    tk.Label(details_window, text=f"Author: {selected_row['Author']}").grid(row=1, column=1, pady=5, sticky=tk.W)
+                    tk.Label(details_window, text=f"Price: ${selected_row['Price']}").grid(row=2, column=1, pady=5, sticky=tk.W)
 
-        buy_button.grid(row=4, column=1, pady=10, sticky=tk.W)
-        sell_button.grid(row=4, column=1, pady=10, sticky=tk.E)
+                    # Get and display the amount of inventory
+                    inventory_label = tk.Label(details_window, text=f"Inventory: {selected_row['Inventory']}")
+                    inventory_label.grid(row=3, column=1, pady=5, sticky=tk.W)
+
+                    # Add "Buy" and "Sell" buttons
+                    if int(selected_row['Inventory']) > 0:
+                        buy_button = tk.Button(details_window, text="Buy", command=lambda name=selected_row['Book Name']: buy_book(name, details_window))
+                    else:
+                        buy_button = tk.Button(details_window, text="Sold Out", state=tk.DISABLED)
+
+                    sell_button = tk.Button(details_window, text="Sell", command=sell_book)
+
+                    buy_button.grid(row=4, column=1, pady=10, sticky=tk.W)
+                    sell_button.grid(row=4, column=1, pady=10, sticky=tk.E)
+
+        # Add a button to apply filter when titles are selected
+        apply_filter_button = tk.Button(title_selection_window, text="Apply Filter", command=apply_filter_on_titles)
+        apply_filter_button.pack(pady=10)
+
+    else:
+        # Open a new window for each matching row
+        for row in matching_rows:
+            details_window = tk.Toplevel(root)
+            details_window.title("Row Details")
+            details_window.geometry("700x300")
+
+            # Display the book image on the left side of the window
+            image_path = f"GroupProject4/files/{row['Book Name']}.png"
+            try:
+                global img  # Declare img as a global variable
+                img = PhotoImage(file=image_path)
+                img = img.subsample(3)  # Adjust the subsample factor as needed
+                image_label = tk.Label(details_window, image=img)
+                image_label.grid(row=0, column=0, rowspan=4, padx=10, pady=10)
+            except tk.TclError:
+                print(f"Error: Image file '{image_path}' not found.")
+
+            # Display the details in labels
+            tk.Label(details_window, text=f"Book Title: {row['Book Name']}").grid(row=0, column=1, pady=5, sticky=tk.W)
+            tk.Label(details_window, text=f"Author: {row['Author']}").grid(row=1, column=1, pady=5, sticky=tk.W)
+            tk.Label(details_window, text=f"Price: ${row['Price']}").grid(row=2, column=1, pady=5, sticky=tk.W)
+
+            # Get and display the amount of inventory
+            inventory_label = tk.Label(details_window, text=f"Inventory: {row['Inventory']}")
+            inventory_label.grid(row=3, column=1, pady=5, sticky=tk.W)
+
+            # Add "Buy" and "Sell" buttons
+            if int(row['Inventory']) > 0:
+                buy_button = tk.Button(details_window, text="Buy", command=lambda name=row['Book Name']: buy_book(name, details_window))
+            else:
+                buy_button = tk.Button(details_window, text="Sold Out", state=tk.DISABLED)
+
+            sell_button = tk.Button(details_window, text="Sell", command=sell_book)
+
+            buy_button.grid(row=4, column=1, pady=10, sticky=tk.W)
+            sell_button.grid(row=4, column=1, pady=10, sticky=tk.E)
 
 
 def buy_book(book_name, details_window):
