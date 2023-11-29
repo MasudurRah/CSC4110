@@ -51,7 +51,7 @@ def customer_login_check(username, password, window):
 def open_registration_window():
     registration_window = tk.Toplevel(root)
     registration_window.title("Customer Registration")
-    registration_window.geometry("400x400")
+    registration_window.geometry("400x550")
 
     username_label = tk.Label(registration_window, text="Username:")
     password_label = tk.Label(registration_window, text="Password:")
