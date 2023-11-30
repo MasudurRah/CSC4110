@@ -626,6 +626,20 @@ def login(username, password, window):
 
     messagebox.showerror("Error", "Invalid credentials")
 
+def update_treeview(tree):
+    # Clear existing items in the tree
+    for item in tree.get_children():
+        tree.delete(item)
+
+    # Reload data from books.csv
+    with open("GroupProject4/files/books.csv", "r") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            tree.insert("", tk.END, values=tuple(row[col] for col in tree["columns"]))
+
+    # Schedule the next update after a delay (e.g., 1000 milliseconds or 1 second)
+    tree.after(1000, lambda: update_treeview(tree))
+
 def open_employee_dashboard():
     employee_dashboard_window = tk.Toplevel(root)
     employee_dashboard_window.title("Employee Dashboard")
@@ -661,12 +675,145 @@ def open_employee_dashboard():
     button_frame = tk.Frame(employee_dashboard_window)
     button_frame.pack(pady=10)
 
-    def buyInventory():
-        blank_window = tk.Toplevel(employee_dashboard_window)
-        blank_window.title("Buy Inventory")
-        blank_window.geometry("300x200")
-        tk.Label(blank_window, text="Buy Inventory.").pack(pady=20)
+    update_treeview(tree)
 
+    def buyInventory():
+        # Create a new window for buying inventory
+        buy_inventory_window = tk.Toplevel(employee_dashboard_window)
+        buy_inventory_window.title("Buy Inventory")
+        buy_inventory_window.geometry("400x300")
+
+        # Label indicating that it's for buying books in inventory
+        tk.Label(buy_inventory_window, text="Buy Books in Inventory").pack(pady=10)
+
+        # Create a dropdown for selecting the book
+        book_label = tk.Label(buy_inventory_window, text="Select Book:")
+        book_var = tk.StringVar()
+        # Populate the dropdown with Book Names from books.csv
+        with open("GroupProject4/files/books.csv", "r") as file:
+            reader = csv.DictReader(file)
+            book_names = [row['Book Name'] for row in reader]
+        book_dropdown = ttk.Combobox(buy_inventory_window, textvariable=book_var, values=book_names)
+        book_dropdown.pack(pady=5)
+
+        # Entry for entering quantity
+        quantity_label = tk.Label(buy_inventory_window, text="Enter Quantity:")
+        quantity_var = tk.StringVar()
+        quantity_entry = tk.Entry(buy_inventory_window, textvariable=quantity_var)
+        quantity_label.pack(pady=5)
+        quantity_entry.pack(pady=5)
+
+        # Label to display the calculated total price
+        total_price_var = tk.StringVar()
+        total_price_label = tk.Label(buy_inventory_window, textvariable=total_price_var)
+        total_price_label.pack(pady=5)
+
+        # Function to update the total price when the quantity changes
+        def update_total_price(*args):
+            try:
+                selected_book = book_var.get()
+                quantity = int(quantity_var.get())
+                with open("GroupProject4/files/books.csv", "r") as file:
+                    reader = csv.DictReader(file)
+                    for row in reader:
+                        if row['Book Name'] == selected_book:
+                            price = float(row['Price'])
+                            total_price = quantity * (price / 2)
+                            total_price_var.set(f"Total Price: ${total_price:.2f}")
+                            break
+                    else:
+                        total_price_var.set("")  # Reset total price if book is not found
+            except ValueError:
+                total_price_var.set("")  # Reset total price if quantity is not a valid number
+
+        # Bind the update_total_price function to the quantity_var variable
+        quantity_var.trace_add("write", update_total_price)
+
+        # Button to confirm the purchase
+        confirm_button = tk.Button(buy_inventory_window, text="Confirm Purchase", command=lambda: confirm_purchase(book_var.get(), quantity_var.get(), total_price_var.get(), buy_inventory_window))
+        confirm_button.pack(pady=10)
+
+    def confirm_purchase(book_name, quantity, total_price, buy_inventory_window):
+        try:
+            # Convert quantity and total price to appropriate types
+            quantity = int(quantity)
+            total_price = float(total_price.split('$')[1])  # Extract the numeric part
+
+            # Read the existing store fund from the file
+            with open("GroupProject4/files/storefund.txt", "r") as fund_file:
+                store_fund = float(fund_file.read().strip())
+
+            # Check if the store fund is sufficient
+            if store_fund < total_price:
+                # Insufficient funds, show an error message
+                messagebox.showerror("Error", "Insufficient funds. Purchase cannot be completed.")
+                return
+
+            # Update the Inventory column in books.csv
+            with open("GroupProject4/files/books.csv", "r") as file:
+                books_data = list(csv.DictReader(file))
+
+            for book in books_data:
+                if book['Book Name'] == book_name:
+                    book['Inventory'] = str(int(book['Inventory']) + quantity)
+                    break
+
+            # Write the updated inventory back to the CSV file
+            with open("GroupProject4/files/books.csv", "w", newline="") as file:
+                fieldnames = books_data[0].keys()
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(books_data)
+
+            # Calculate the new store fund
+            new_store_fund = store_fund - total_price
+
+            # Update the store fund in the file
+            with open("GroupProject4/files/storefund.txt", "w") as fund_file:
+                fund_file.write(f"{new_store_fund:.2f}")
+
+            # Update the earnings.csv file
+            transaction_id = generate_transaction_id()
+            update_earnings_file(new_store_fund, quantity, total_price, transaction_id)
+
+            # Show a confirmation message to the user
+            messagebox.showinfo("Purchase Confirmation", f"You have successfully purchased {quantity} copies of {book_name} for a total of ${total_price:.2f}. The store fund has been updated.")
+
+            # Close the buy inventory window
+            buy_inventory_window.destroy()
+
+        except ValueError:
+            # Handle the case where quantity or total price is not a valid number
+            messagebox.showerror("Error", "Invalid quantity or total price. Please enter valid numbers.")
+
+    def generate_transaction_id():
+        # Generate an 8-digit random transaction ID
+        return str(random.randint(10000000, 99999999))
+
+    def update_earnings_file(store_fund, units, total_spent, transaction_id):
+        # Read the existing data from earnings.csv
+        with open("GroupProject4/files/earnings.csv", "r") as earnings_file:
+            earnings_data = list(csv.DictReader(earnings_file))
+
+        # Create a new row with the updated information
+        new_row = {
+            'store fund': store_fund,
+            'units': units,
+            'totalearned': 0,
+            'totalspent': total_spent,
+            'transactionid': transaction_id
+        }
+
+        # Append the new row to the existing data
+        earnings_data.append(new_row)
+
+        # Write the updated data back to earnings.csv
+        with open("GroupProject4/files/earnings.csv", "w", newline="") as earnings_file:
+            fieldnames = ['store fund', 'units', 'totalearned', 'totalspent', 'transactionid']
+            writer = csv.DictWriter(earnings_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(earnings_data)
+            
     def viewearnings():
         blank_window = tk.Toplevel(employee_dashboard_window)
         blank_window.title("Earnings")
@@ -679,11 +826,77 @@ def open_employee_dashboard():
         blank_window.geometry("300x200")
         tk.Label(blank_window, text="This is window 3.").pack(pady=20)
 
+    
+    def add_new_book():
+        # Create a new window for adding a new book
+        add_book_window = tk.Toplevel(employee_dashboard_window)
+        add_book_window.title("Add New Book")
+        add_book_window.geometry("400x400")
+
+        # Labels and Entry widgets for book information
+        tk.Label(add_book_window, text="Book Name:").pack(pady=5)
+        book_name_var = tk.StringVar()
+        book_name_entry = tk.Entry(add_book_window, textvariable=book_name_var)
+        book_name_entry.pack(pady=5)
+
+        tk.Label(add_book_window, text="Author:").pack(pady=5)
+        author_var = tk.StringVar()
+        author_entry = tk.Entry(add_book_window, textvariable=author_var)
+        author_entry.pack(pady=5)
+
+        tk.Label(add_book_window, text="ISBN (13 digits):").pack(pady=5)
+        isbn_var = tk.StringVar()
+        isbn_entry = tk.Entry(add_book_window, textvariable=isbn_var)
+        isbn_entry.pack(pady=5)
+
+        tk.Label(add_book_window, text="Genre (letters only):").pack(pady=5)
+        genre_var = tk.StringVar()
+        genre_entry = tk.Entry(add_book_window, textvariable=genre_var)
+        genre_entry.pack(pady=5)
+
+        tk.Label(add_book_window, text="Price (float):").pack(pady=5)
+        price_var = tk.StringVar()
+        price_entry = tk.Entry(add_book_window, textvariable=price_var)
+        price_entry.pack(pady=5)
+
+        # Function to add the new book to books.csv
+        def add_book_to_inventory():
+            try:
+                # Perform error checking on ISBN, genre, and price
+                if not isbn_var.get().isdigit() or len(isbn_var.get()) != 13:
+                    raise ValueError("ISBN must be 13 digits and consist only of numbers.")
+                
+                if not genre_var.get().isalpha():
+                    raise ValueError("Genre must consist only of letters.")
+
+                float(price_var.get())  # Try converting the price to a float
+                
+                # Add the new book to books.csv
+                with open("GroupProject4/files/books.csv", "a", newline="") as file:
+                    writer = csv.writer(file)
+                    writer.writerow([book_name_var.get(), author_var.get(), "0", isbn_var.get(), genre_var.get(), price_var.get()])
+
+                # Close the window after successfully adding the book
+                add_book_window.destroy()
+
+                # Optionally, show a confirmation message to the user
+                messagebox.showinfo("Book Added", f"The book '{book_name_var.get()}' has been added to the inventory.")
+
+            except ValueError as e:
+                # Handle the error and show an error message
+                messagebox.showerror("Error", str(e))
+
+        # Button to confirm adding the book
+        confirm_button = tk.Button(add_book_window, text="Add Book", command=add_book_to_inventory)
+        confirm_button.pack(pady=10)
+
     button1 = tk.Button(button_frame, text="Buy Inventory", command=buyInventory)
     button2 = tk.Button(button_frame, text="View Earnings", command=viewearnings)
+    add_new_book_button = tk.Button(button_frame, text="Add New Book", command=add_new_book)
 
     button1.pack(side=tk.LEFT, padx=10)
     button2.pack(side=tk.LEFT, padx=10)
+    add_new_book_button.pack(side=tk.LEFT, pady=10)
 
     logout_button = tk.Button(employee_dashboard_window, text="Logout", command=lambda: logout(employee_dashboard_window))
     logout_button.pack(pady=10)
