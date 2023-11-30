@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <title>Group 5 Homepage</title>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-        <link rel="stylesheet" href="src/css/style.css">
-    
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    
-        <!-- Bootstrap JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous">
-        </script>
-    </head>
+<head>
+    <title>Group 5 Homepage</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="src/css/style.css">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <!-- Owl Carousel CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+</head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
@@ -44,6 +43,12 @@
         </div>
     </nav>
 
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <!-- ... (unchanged) ... -->
+    </nav>
+
     <div class="container mt-5">
         <div class="row justify-content-center align-items-center">
             <div class="col-md-6 text-center">
@@ -58,12 +63,11 @@
             </div>
         </div>
 
-
-        <h1 class="producthomepage">This week's project: Project 4</h1>
+        <h1 class="producthomepage mt-5">This week's project: Project 4</h1>
 
         <div class="row justify-content-center align-items-center mt-5">
             <div class="col-md-6 text-center">
-                <img src="src/img/cat.jpg" alt="Project 4 UI showing a bookstore login tab" class="productimage">
+                <img src="src/img/cat.jpg" alt="Project 4 UI showing a bookstore login tab" class="img-fluid productimage">
             </div>
 
             <div class="col-md-6 text-center">
@@ -76,63 +80,99 @@
         </div>
     </div>
 
+    <h1 class="producthomepage mt-5">Past Projects: </h1>
 
-        <h1 class="producthomepage">Past Projects: </h1>
-
-        <div class="row justify-content-center align-items-center mt-5">
-            <div class="col-md-6 text-center">
-                <img src="src/img/login.png" alt="Image of Project 3's UI for a bug tracker." class="productimage">
-            </div>
-
-            <div class="col-md-6 text-center">
-                <div class="mainText">
-                    <p class="homepagetext">For project 3, our group worked on behalf of Forestview to create a bug tracker for a helpdesk.</p>
+    <!-- Owl Carousel for Past Projects -->
+    <div class="owl-carousel owl-theme">
+        <div class="item">
+            <div class="row justify-content-center align-items-center mt-5">
+                <div class="col-md-6 text-center">
+                    <img src="src/img/login.png" alt="Image of Project 3's UI for a bug tracker." class="img-fluid productimage">
                 </div>
+                <div class="col-md-6 text-center">
+                    <div class="mainText">
+                        <p class="homepagetext">For project 3, our group worked on behalf of Forestview to create a bug tracker for a helpdesk.</p>
+                    </div>
+                    <a href="../GroupProject3/frontend/index-gp3.html" class="btn btn-warning">Check out the project here</a>
+                </div>
+            </div>
+        </div>
 
-                <a href="../GroupProject3/frontend/index-gp3.html" class="btn btn-warning">Check out the project here</a>
+        <div class="item">
+            <div class="row justify-content-center align-items-center mt-5">
+                <div class="col-md-6 text-center">
+                    <img src="src/img/wordle.jpg" alt="Image of Project 2's UI for a wordle game, it is a turtle tab that says Welcome to Wordle in white font against a green background." class="img-fluid productimage">
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="mainText">
+                        <p class="homepagetext">For project 2, our group worked on behalf of Forestview to create a game using Python's Turtle Module.</p>
+                    </div>
+                    <a href="../GroupProject2/frontend/index-gp2.html" class="btn btn-warning">Check out the project here</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="item">
+            <div class="row justify-content-center align-items-center mt-5">
+                <div class="col-md-6 text-center">
+                    <img src="src/img/CSV Editor.png" alt="Image of Project 1's UI. It says CSV Editor at the top, and below there are 5 buttons that say import, remove, add, query, and list. At the bottom it says 'no file opened'." class="img-fluid productimage">
+                </div>
+                <div class="col-md-6 text-center">
+                    <div class="mainText">
+                        <p class="homepagetext">For project 1, our group worked on behalf of Forestview to create a proposal / “mock” application. This application deals with data storage. It allows the user to use Python to add, store, and retrieve data using a CSV file. This is part of Forestview’s upcoming SafeZone© proposals to key customers, such as Dell EMC.</p>
+                    </div>
+                    <a href="../GroupProject1/frontend/index-gp1.html" class="btn btn-warning">Check out the project here</a>
+                </div>
             </div>
         </div>
     </div>
 
-        <div class="row justify-content-center align-items-center mt-5">
-            <div class="col-md-6 text-center">
-                <img src="src/img/wordle.jpg" alt="Image of Project 2's UI for a wordle game, it is a turtle tab that says Welcome to Wordle in white font against a green background." class="productimage">
-            </div>
+    <!-- Owl Carousel JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
-            <div class="col-md-6 text-center">
-                <div class="mainText">
-                    <p class="homepagetext">For project 2, our group worked on behalf of Forestview to create a game using Python's Turtle Module.</p>
-                </div>
+    <!-- Custom Script for Owl Carousel -->
+    <script>
+        $(document).ready(function () {
+            $(".owl-carousel").owlCarousel({
+                items: 1,
+                loop: true,
+                autoplay: true,
+                autoplayTimeout: 5000, // Change this value to adjust slide duration
+                autoplayHoverPause: true,
+                dots: true
+            });
+        });
+    </script>
 
-                <a href="../GroupProject2/frontend/index-gp2.html" class="btn btn-warning">Check out the project here</a>
-            </div>
-        </div>
-    </div>
+<!-- Custom Style for Owl Carousel Images -->
+<style>
+    .owl-image {
+        width: 90%; /* Use 100% width for better responsiveness */
+        height: auto; /* Maintain the aspect ratio */
+    }
 
-        <div class="row justify-content-center align-items-center mt-5">
-            <div class="col-md-6 text-center">
-                <img src="src/img/CSV Editor.png" alt="Image of Project 1's UI. It says CSV Editor at the top, and below there are 5 buttons that say import, remove, add, query, and list. At the bottom it says 'no file opened'." class="productimage">
-            </div>
+    /* Set a maximum width for the carousel container */
+    .owl-carousel {
+        max-width: 1000px; /* Adjust this value based on your design */
+        margin: 0 auto; /* Center the carousel within its container */
+    }
+</style>
 
-            <div class="col-md-6 text-center">
-                <div class="mainText">
-                    <p class="homepagetext">For project 1, our group worked on behalf of Forestview to create a proposal / “mock” application. This application deals with data storage. It allows the user to use Python to add, store, and retrieve data using a CSV file. This is part of Forestview’s upcoming SafeZone© proposals to key customers, such as Dell EMC.</p>
-                </div>
 
-                <a href="../GroupProject1/frontend/index-gp1.html" class="btn btn-warning">Check out the project here</a>
-            </div>
-        </div>
-    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 
     <footer class="homepageFooter">
-  <p>Authors: Aleks, Abdulrahman, D, Hamam, Mas, Nadinne <br> Created by: Group 5 of CSC 4110, Fall 2023. <br>
-  <a href="../Homepage/index.html">Home</a>
-  <a href="../GroupProject1/frontend/index-gp1.html">Project 1</a>
-  <a href="../GroupProject2/frontend/index-gp2.html">Project 2</a>
-  <a href="../GroupProject3/frontend/index-gp3.html">Project 3</a>
-  <a href="../GroupProject4/frontend/index-gp4.html">Project 4</a></p>
-</footer>
-
+        <p>Authors: Aleks, Abdulrahman, D, Hamam, Mas, Nadinne <br> Created by: Group 5 of CSC 4110, Fall 2023. <br>
+        <a href="../Homepage/index.html">Home</a>
+        <a href="../GroupProject1/frontend/index-gp1.html">Project 1</a>
+        <a href="../GroupProject2/frontend/index-gp2.html">Project 2</a>
+        <a href="../GroupProject3/frontend/index-gp3.html">Project 3</a>
+        <a href="../GroupProject4/frontend/index-gp4.html">Project 4</a></p>
+    </footer>
+    
 </body>
 
 </html>
