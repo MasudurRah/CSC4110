@@ -177,8 +177,8 @@ def open_blank_window(title):
     cart_button.pack(side=tk.LEFT, padx=10)
 
     logout_button = tk.Button(blank_window, text="Logout", command=lambda: [blank_window.destroy(), customer_login()])
-    logout_button.pack(pady=10)
-
+    logout_button.pack(side=tk.RIGHT, padx=20)
+                       
 def open_cart_window():
     cart_window = tk.Toplevel(root)
     cart_window.title("Shopping Cart")
