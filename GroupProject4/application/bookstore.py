@@ -156,7 +156,7 @@ def open_blank_window(title):
         for i, row in enumerate(reader):
             if i < 3:
                 button_text = f"{row['Book Name']}\n{row['Genre']}\n{row['Author']}"
-                button = tk.Button(button_frame_row1, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]))
+                button = tk.Button(button_frame_row1, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]), bg = 'DARK GREY')
                 button.pack(side=tk.LEFT, padx=10)
 
     button_frame_row2 = tk.Frame(blank_window)
@@ -167,7 +167,7 @@ def open_blank_window(title):
         for i, row in enumerate(reader):
             if 3 <= i < 6:
                 button_text = f"{row['Book Name']}\n{row['Genre']}\n{row['Author']}"
-                button = tk.Button(button_frame_row2, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]))
+                button = tk.Button(button_frame_row2, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]), bg = 'DARK GREY')
                 button.pack(side=tk.LEFT, padx=10)
 
     search_button = tk.Button(blank_window, text="Search", command=open_search_window)
