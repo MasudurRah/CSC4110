@@ -149,7 +149,8 @@ def open_blank_window(title):
         image_label.pack(pady=10)
 
     button_frame_row1 = tk.Frame(blank_window)
-    button_frame_row1.pack(pady=10)
+    button_frame_row1.pack(pady=10, padx = 5)
+
 
     with open("GroupProject4/files/books.csv", "r") as file:
         reader = csv.DictReader(file)
@@ -160,7 +161,7 @@ def open_blank_window(title):
                 button.pack(side=tk.LEFT, padx=10)
 
     button_frame_row2 = tk.Frame(blank_window)
-    button_frame_row2.pack(pady=10)
+    button_frame_row2.pack(pady=10, padx = 5)
 
     with open("GroupProject4/files/books.csv", "r") as file:
         reader = csv.DictReader(file)
@@ -272,7 +273,7 @@ def apply_filter(column_name, filter_value):
                 selected_title = title_listbox.get(index)
                 details_window = tk.Toplevel(root)
                 details_window.title("Row Details")
-                details_window.geometry("700x300")
+                details_window.geometry("400x300")
 
                 selected_row = next((row for row in matching_rows if row['Book Name'] == selected_title), None)
 
@@ -295,23 +296,23 @@ def apply_filter(column_name, filter_value):
                     inventory_label.grid(row=3, column=1, pady=5, sticky=tk.W)
 
                     if int(selected_row['Inventory']) > 0:
-                        buy_button = tk.Button(details_window, text="Buy", command=lambda name=selected_row['Book Name']: buy_book(name, details_window))
+                        buy_button = tk.Button(details_window, text="Buy", command=lambda name=selected_row['Book Name']: buy_book(name, details_window), font=("Arial", 14))
                     else:
-                        buy_button = tk.Button(details_window, text="Sold Out", state=tk.DISABLED)
+                        buy_button = tk.Button(details_window, text="Sold Out", state=tk.DISABLED, font=("Arial", 14))
 
-                    sell_button = tk.Button(details_window, text="Sell", command=lambda title=row['Book Name']: sell_book(title))#
+                    sell_button = tk.Button(details_window, text="Sell", command=lambda title=row['Book Name']: sell_book(title), font=("Arial", 14))
 
-                    buy_button.grid(row=4, column=1, pady=10, sticky=tk.W)
-                    sell_button.grid(row=4, column=1, pady=10, sticky=tk.E)
+                    buy_button.grid(row=4, column=1, pady=10, padx = 2, sticky=tk.W)
+                    sell_button.grid(row=4, column=1, pady=10, padx = 150, sticky=tk.E)
 
-        apply_filter_button = tk.Button(title_selection_window, text="Apply Filter", command=apply_filter_on_titles)
+        apply_filter_button = tk.Button(title_selection_window, text="Apply Filter", command=apply_filter_on_titles, font=("Arial", 14))
         apply_filter_button.pack(pady=10)
 
     else:
         for row in matching_rows:
             details_window = tk.Toplevel(root)
             details_window.title("Row Details")
-            details_window.geometry("700x300")
+            details_window.geometry("400x300")
 
             image_path = f"GroupProject4/files/{row['Book Name']}.png"
             try:
@@ -331,11 +332,11 @@ def apply_filter(column_name, filter_value):
             inventory_label.grid(row=3, column=1, pady=5, sticky=tk.W)
 
             if int(row['Inventory']) > 0:
-                buy_button = tk.Button(details_window, text="Buy", command=lambda name=row['Book Name']: buy_book(name, details_window))
+                buy_button = tk.Button(details_window, text="Buy", command=lambda name=row['Book Name']: buy_book(name, details_window), font=("Arial", 14))
             else:
-                buy_button = tk.Button(details_window, text="Sold Out", state=tk.DISABLED)
+                buy_button = tk.Button(details_window, text="Sold Out", state=tk.DISABLED, font=("Arial", 14))
 
-            sell_button = tk.Button(details_window, text="Sell", command=lambda title=row['Book Name']: sell_book(title))
+            sell_button = tk.Button(details_window, text="Sell", command=lambda title=row['Book Name']: sell_book(title), font=("Arial", 14))
 
             buy_button.grid(row=4, column=1, pady=10, sticky=tk.W)
             sell_button.grid(row=4, column=1, pady=10, sticky=tk.E)
