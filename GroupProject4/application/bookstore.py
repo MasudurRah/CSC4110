@@ -141,22 +141,23 @@ def open_blank_window(title):
     blank_window.title(title)
     blank_window.geometry("600x400")
 
-    best_sellers_label = tk.Label(blank_window, text="Best Sellers", font=("Helvetica", 16, "bold"))
-    best_sellers_label.pack(pady=10)
-
     if img:
         image_label = tk.Label(blank_window, image=img)
         image_label.pack(pady=10)
 
+    best_sellers_label = tk.Label(blank_window, text="Featured Books", font=("Helvetica", 16, "bold"))
+    best_sellers_label.pack(pady=10)
+
     button_frame_row1 = tk.Frame(blank_window)
     button_frame_row1.pack(pady=10)
+    
 
     with open("GroupProject4/files/books.csv", "r") as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
             if i < 3:
                 button_text = f"{row['Book Name']}\n{row['Genre']}\n{row['Author']}"
-                button = tk.Button(button_frame_row1, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]))
+                button = tk.Button(button_frame_row1, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]), bg = 'DARK GREY')
                 button.pack(side=tk.LEFT, padx=10)
 
     button_frame_row2 = tk.Frame(blank_window)
@@ -167,7 +168,7 @@ def open_blank_window(title):
         for i, row in enumerate(reader):
             if 3 <= i < 6:
                 button_text = f"{row['Book Name']}\n{row['Genre']}\n{row['Author']}"
-                button = tk.Button(button_frame_row2, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]))
+                button = tk.Button(button_frame_row2, text=button_text, command=lambda r=row: apply_filter("Book Name", r["Book Name"]), bg = 'DARK GREY')
                 button.pack(side=tk.LEFT, padx=10)
 
     search_button = tk.Button(blank_window, text="Search", command=open_search_window)
@@ -817,8 +818,36 @@ def open_employee_dashboard():
     def viewearnings():
         blank_window = tk.Toplevel(employee_dashboard_window)
         blank_window.title("Earnings")
-        blank_window.geometry("300x200")
-        tk.Label(blank_window, text="THIS WINDOW SHOWS EARNINGS").pack(pady=20)
+        blank_window.geometry("1250x350")
+
+        # Read the store fund value from storefund.txt
+        with open("GroupProject4/files/storefund.txt", "r") as fund_file:
+            store_fund_amount = float(fund_file.read().strip())
+
+        # Create and display the Store Fund label
+        store_fund_label = tk.Label(blank_window, text=f"Store Fund: ${store_fund_amount:.2f}")
+        store_fund_label.pack(pady=20)
+
+        # Create a Treeview widget for displaying earnings data
+        earnings_tree = ttk.Treeview(blank_window)  # Use ttk.Treeview
+        earnings_tree["columns"] = ("Store Fund", "Units", "Total Earned", "Total Spent", "Transaction ID")
+
+        # Define column headings
+        earnings_tree.heading("#0", text="Index")
+        earnings_tree.heading("Store Fund", text="Store Fund")
+        earnings_tree.heading("Units", text="Units")
+        earnings_tree.heading("Total Earned", text="Total Earned")
+        earnings_tree.heading("Total Spent", text="Total Spent")
+        earnings_tree.heading("Transaction ID", text="Transaction ID")
+
+        # Read data from earnings.csv and insert into the Treeview
+        with open("GroupProject4/files/earnings.csv", "r") as earnings_file:
+            reader = csv.DictReader(earnings_file)
+            for i, row in enumerate(reader, 1):
+                earnings_tree.insert("", "end", text=f"{i}", values=(row["store fund"], row["units"], row["totalearned"], row["totalspent"], row["transactionid"]))
+
+        # Pack the Treeview widget
+        earnings_tree.pack(pady=10)
 
     def buttonk3():
         blank_window = tk.Toplevel(employee_dashboard_window)
