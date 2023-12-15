@@ -273,7 +273,7 @@ def apply_filter(column_name, filter_value):
                 selected_title = title_listbox.get(index)
                 details_window = tk.Toplevel(root)
                 details_window.title("Row Details")
-                details_window.geometry("700x300")
+                details_window.geometry("400x300")
 
                 selected_row = next((row for row in matching_rows if row['Book Name'] == selected_title), None)
 
@@ -312,7 +312,7 @@ def apply_filter(column_name, filter_value):
         for row in matching_rows:
             details_window = tk.Toplevel(root)
             details_window.title("Row Details")
-            details_window.geometry("700x300")
+            details_window.geometry("400x300")
 
             image_path = f"GroupProject4/files/{row['Book Name']}.png"
             try:
