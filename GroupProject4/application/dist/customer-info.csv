@@ -1,0 +1,5 @@
+user,pass,email,address,zipcode,city,state
+JohnSmith,password,jsmith@gmail.com,9813 Calvin St.,98313,CA
+mas,1,mas@gmail.com,321 Street,93721,detroit,Michigan
+test,1,email@gmail.com,134 Street,12345,Test,California
+IDK,1,test@gmail.com,123 Street,11111,Test,Florida
