@@ -7,7 +7,7 @@ import re
 import random
 import json
 
-img = None
+IMG = None
 
 def customer_login():
     """Launches customer login"""
@@ -19,8 +19,8 @@ def open_customer_login_window():
     customer_login_window.title("Customer Login")
     customer_login_window.geometry("400x400")
 
-    if img:
-        image_label = tk.Label(customer_login_window, image=img)
+    if IMG:
+        image_label = tk.Label(customer_login_window, image=IMG)
         image_label.pack(pady=10)
 
     username_label = tk.Label(customer_login_window, text="Username:")
@@ -28,7 +28,8 @@ def open_customer_login_window():
     username_entry = tk.Entry(customer_login_window)
     password_entry = tk.Entry(customer_login_window, show="*")
 
-    login_button = tk.Button(customer_login_window, text="Login", command=lambda: customer_login_check(username_entry.get(), password_entry.get(), customer_login_window))
+    login_button = tk.Button(customer_login_window, text="Login", command=lambda:
+                             customer_login_check(username_entry.get(), password_entry.get(), customer_login_window))
 
     register_button = tk.Button(customer_login_window, text="Register", command=open_registration_window)
 
@@ -41,7 +42,7 @@ def open_customer_login_window():
 
 def customer_login_check(username, password, window):
     """Make sure customer login is working"""
-    with open("customer-info.csv", "r") as file:
+    with open("GroupProject4/files/customer-info.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row["user"] == username and row["pass"] == password:
@@ -74,11 +75,16 @@ def open_registration_window():
     zipcode_entry = tk.Entry(registration_window)
     city_entry = tk.Entry(registration_window)
 
-    states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
-              "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
-              "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
-              "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
-              "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
+    states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California",
+              "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+              "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas",
+              "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
+              "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana",
+              "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",
+              "New York", "North Carolina", "North Dakota", "Ohio",
+              "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+              "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+              "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
 
     state_var = tk.StringVar()
     state_dropdown = ttk.Combobox(registration_window, textvariable=state_var, values=states)
@@ -117,14 +123,14 @@ def register_customer(username, password, email, address, zipcode, city, state, 
         messagebox.showerror("Error", "Invalid zipcode format (5 digits)")
         return
 
-    with open("customer-info.csv", "r") as file:
+    with open("GroupProject4/files/customer-info.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row["user"] == username:
                 messagebox.showerror("Error", "Username is already taken. Please choose a different one.")
                 return
 
-    with open("customer-info.csv", "a", newline="") as file:
+    with open("GroupProject4/files/customer-info.csv", "a", newline="", encoding="utf-8") as file:
         fieldnames = ["username", "password", "email", "address", "zipcode", "city", "state"]
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         if file.tell() == 0:
@@ -144,13 +150,13 @@ def register_customer(username, password, email, address, zipcode, city, state, 
 
 def open_blank_window(title):
     """Opens customer dashboard """
-    global img
+    global IMG
     blank_window = tk.Toplevel(root)
     blank_window.title(title)
     blank_window.geometry("600x400")
 
-    if img:
-        image_label = tk.Label(blank_window, image=img)
+    if IMG:
+        image_label = tk.Label(blank_window, image=IMG)
         image_label.pack(pady=10)
 
     best_sellers_label = tk.Label(blank_window, text="Featured Books", font=("Helvetica", 16, "bold"))
@@ -158,9 +164,9 @@ def open_blank_window(title):
 
     button_frame_row1 = tk.Frame(blank_window)
     button_frame_row1.pack(pady=10)
-    
 
-    with open("books.csv", "r") as file:
+
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
             if i < 3:
@@ -171,7 +177,7 @@ def open_blank_window(title):
     button_frame_row2 = tk.Frame(blank_window)
     button_frame_row2.pack(pady=10)
 
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
             if 3 <= i < 6:
@@ -221,7 +227,7 @@ def open_search_window():
 def load_filter_options(column_name):
     """Loads filter selected by user """
     options = set()
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             options.add(row[column_name])
@@ -243,8 +249,8 @@ def open_employee_login_window():
     employee_login_window.title("Employee Login")
     employee_login_window.geometry("400x350")
 
-    if img:
-        image_label = tk.Label(employee_login_window, image=img)
+    if IMG:
+        image_label = tk.Label(employee_login_window, image=IMG)
         image_label.pack(pady=10)
 
     username_label = tk.Label(employee_login_window, text="Username:")
@@ -263,7 +269,7 @@ def open_employee_login_window():
 def apply_filter(column_name, filter_value):
     """ Applying filter"""
     matching_rows = []
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row[column_name] == filter_value:
@@ -291,7 +297,7 @@ def apply_filter(column_name, filter_value):
                 selected_row = next((row for row in matching_rows if row['Book Name'] == selected_title), None)
 
                 if selected_row:
-                    image_path = f"{selected_row['Book Name']}.png"
+                    image_path = f"GroupProject4/files/{selected_row['Book Name']}.png"
                     try:
                         img_local = PhotoImage(file=image_path)
                         img_local = img_local.subsample(3)
@@ -327,7 +333,7 @@ def apply_filter(column_name, filter_value):
             details_window.title("Row Details")
             details_window.geometry("400x300")
 
-            image_path = f"{row['Book Name']}.png"
+            image_path = f"GroupProject4/files/{row['Book Name']}.png"
             try:
                 img_local = PhotoImage(file=image_path)
                 img_local = img_local.subsample(3)
@@ -357,7 +363,7 @@ def apply_filter(column_name, filter_value):
 
 def buy_book(book_name, details_window):
     """Buying inventory for books """
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row['Book Name'] == book_name:
@@ -379,7 +385,7 @@ def buy_book(book_name, details_window):
     quantity_var = tk.StringVar()
     quantity_var.set(1)
     quantity_dropdown = ttk.Combobox(buy_window, textvariable=quantity_var, values=list(range(1, quantity_limit + 1)))
-    
+
     add_to_cart_button = tk.Button(buy_window, text="Add to Cart", command=lambda: add_to_cart(book_name, int(quantity_var.get()), buy_window))
     cancel_button = tk.Button(buy_window, text="Cancel", command=buy_window.destroy)
 
@@ -416,7 +422,7 @@ def add_to_cart(book_name, quantity, buy_window):
 
 def get_book_price(book_name):
     """ Grabs price of book from books.csv"""
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row['Book Name'] == book_name:
@@ -427,9 +433,9 @@ def complete_purchase(cart_window):
     """ completes purchases and updates inventory and earnings sheet"""
     update_inventory()
 
-    with open("earnings.csv", "r") as earnings_file:
+    with open("GroupProject4/files/earnings.csv", "r", encoding="utf-8") as earnings_file:
         earnings_data = list(csv.DictReader(earnings_file))
-    
+
     latest_transactionid = earnings_data[-1]['transactionid']
 
     messagebox.showinfo("Purchase Complete", f"Your purchase is complete. It will be delivered to the address in your profile.\nTransaction ID: {latest_transactionid}")
@@ -444,7 +450,7 @@ def update_inventory():
     """ Cart gets updated"""
     global cart
 
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         books_data = list(csv.DictReader(file))
 
     for book_name, details in cart.items():
@@ -457,14 +463,14 @@ def update_inventory():
     total_earned = sum(details['price'] * details['quantity'] for details in cart.values())
     total_spent = total_earned / 2
 
-    with open("storefund.txt", "r") as store_fund_file:
+    with open("GroupProject4/files/storefund.txt", "r", encoding="utf-8") as store_fund_file:
         current_store_fund = float(store_fund_file.read().strip())
 
     current_store_fund = int(current_store_fund)
 
     updated_store_fund = current_store_fund + total_earned
 
-    with open("storefund.txt", "w") as store_fund_file:
+    with open("GroupProject4/files/storefund.txt", "w", encoding="utf-8") as store_fund_file:
         store_fund_file.write(str(updated_store_fund))
 
     transactionid = str(random.randint(100000000, 999999999))
@@ -477,7 +483,7 @@ def update_inventory():
         'transactionid': transactionid
     }
 
-    with open("earnings.csv", "r") as earnings_file:
+    with open("GroupProject4/files/earnings.csv", "r", encoding="utf-8") as earnings_file:
         earnings_data = list(csv.DictReader(earnings_file))
 
     store_fund = updated_store_fund
@@ -492,7 +498,7 @@ def update_inventory():
 
     earnings_data.append(new_entry)
 
-    with open("earnings.csv", "w", newline="") as earnings_file:
+    with open("GroupProject4/files/earnings.csv", "w", newline="", encoding="utf-8") as earnings_file:
         fieldnames = earnings_data[0].keys()
         writer = csv.DictWriter(earnings_file, fieldnames=fieldnames)
         writer.writeheader()
@@ -500,7 +506,7 @@ def update_inventory():
 
     cart = {}
 
-    with open("books.csv", "w", newline="") as file:
+    with open("GroupProject4/files/books.csv", "w", newline="", encoding="utf-8") as file:
         fieldnames = books_data[0].keys()
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
@@ -509,7 +515,7 @@ def update_inventory():
 
 def sell_book(book_title):
     """ Sell books to store"""
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row['Book Name'] == book_title:
@@ -558,14 +564,14 @@ def sell_book(book_title):
 
 def confirm_sale(book_title, quantity, price, sell_window):
     """confirm sale of books to user """
-    with open("storefund.txt", "r") as fund_file:
+    with open("GroupProject4/files/storefund.txt", "r", encoding="utf-8") as fund_file:
         store_fund = float(fund_file.read().strip())
 
     total_amount = quantity * (price / 2)
 
     new_store_fund = store_fund - total_amount
 
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         books_data = list(csv.DictReader(file))
 
     for book in books_data:
@@ -573,13 +579,13 @@ def confirm_sale(book_title, quantity, price, sell_window):
             book['Inventory'] = str(int(book['Inventory']) + quantity)
             break
 
-    with open("books.csv", "w", newline="") as file:
+    with open("GroupProject4/files/books.csv", "w", newline="", encoding="utf-8") as file:
         fieldnames = books_data[0].keys()
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(books_data)
 
-    with open("storefund.txt", "w") as fund_file:
+    with open("GroupProject4/files/storefund.txt", "w", encoding="utf-8") as fund_file:
         fund_file.write(f"{new_store_fund:.2f}")
 
     transaction_id = generate_unique_transaction_id()
@@ -594,7 +600,7 @@ def generate_unique_transaction_id():
     """ generates transaction id """
     transaction_id = str(random.randint(100000000, 999999999))
 
-    with open("earnings.csv", "r") as file:
+    with open("GroupProject4/files/earnings.csv", "r", encoding="utf-8") as file:
         reader = csv.reader(file)
         for row in reader:
             if transaction_id == row[4]:
@@ -610,14 +616,14 @@ def update_earnings_csv(transaction_id, quantity, total_price):
     total_earned = 0
     total_spent = total_price
 
-    with open("earnings.csv", "a", newline="") as file:
+    with open("GroupProject4/files/earnings.csv", "a", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow([new_store_fund, quantity, total_earned, total_spent, transaction_id])
 
 def get_previous_store_fund():
     """gets store fund """
     try:
-        with open("earnings.csv", "r") as file:
+        with open("GroupProject4/files/earnings.csv", "r", encoding="utf-8") as file:
             reader = csv.reader(file)
             last_row = None
             for row in reader:
@@ -629,19 +635,15 @@ def get_previous_store_fund():
 
 def initialize_earnings_csv():
     """ Initializes earnings """
-    #try:
-    with open("earnings.csv", "r") as file:
+    with open("GroupProject4/files/earnings.csv", "r", encoding="utf-8") as file:
         pass
-    #except FileNotFoundError:
-    #    with open("earnings.csv", "w", newline="") as file:
-    #        writer = csv.writer(file)
-    #        writer.writerow(["Store Fund", "Units Sold", "Total Earned", "Total Spent", "Transaction ID"])
 
 initialize_earnings_csv()
 
 
 def login(username, password, window):
-    with open("user_credentials.csv", "r") as file:
+    """ Employee login"""
+    with open("GroupProject4/files/user_credentials.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             if row["user"] == username and row["pass"] == password:
@@ -656,7 +658,7 @@ def update_treeview(tree):
     for item in tree.get_children():
         tree.delete(item)
 
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             tree.insert("", tk.END, values=tuple(row[col] for col in tree["columns"]))
@@ -669,12 +671,12 @@ def open_employee_dashboard():
     employee_dashboard_window.title("Employee Dashboard")
     employee_dashboard_window.geometry("1250x500")
 
-    if img:
-        image_label = tk.Label(employee_dashboard_window, image=img)
+    if IMG:
+        image_label = tk.Label(employee_dashboard_window, image=IMG)
         image_label.pack(pady=10)
 
     tree = ttk.Treeview(employee_dashboard_window)
-    tree["columns"] = tuple(get_column_names("books.csv"))
+    tree["columns"] = tuple(get_column_names("GroupProject4/files/books.csv"))
 
     tree["show"] = "headings"
 
@@ -682,7 +684,7 @@ def open_employee_dashboard():
         tree.heading(col, text=col)
         tree.column(col, anchor=tk.CENTER)
 
-    with open("books.csv", "r") as file:
+    with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
             tree.insert("", tk.END, values=tuple(row[col] for col in tree["columns"]))
@@ -701,7 +703,7 @@ def open_employee_dashboard():
 
     update_treeview(tree)
 
-    def buyInventory():
+    def buy_Inventory():
         """ buy new inventory"""
         buy_inventory_window = tk.Toplevel(employee_dashboard_window)
         buy_inventory_window.title("Buy Inventory")
@@ -711,7 +713,7 @@ def open_employee_dashboard():
 
         book_label = tk.Label(buy_inventory_window, text="Select Book:")
         book_var = tk.StringVar()
-        with open("books.csv", "r") as file:
+        with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
             book_names = [row['Book Name'] for row in reader]
         book_dropdown = ttk.Combobox(buy_inventory_window, textvariable=book_var, values=book_names)
@@ -732,7 +734,7 @@ def open_employee_dashboard():
             try:
                 selected_book = book_var.get()
                 quantity = int(quantity_var.get())
-                with open("books.csv", "r") as file:
+                with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
                     reader = csv.DictReader(file)
                     for row in reader:
                         if row['Book Name'] == selected_book:
@@ -756,14 +758,14 @@ def open_employee_dashboard():
             quantity = int(quantity)
             total_price = float(total_price.split('$')[1])
 
-            with open("storefund.txt", "r") as fund_file:
+            with open("GroupProject4/files/storefund.txt", "r", encoding="utf-8") as fund_file:
                 store_fund = float(fund_file.read().strip())
 
             if store_fund < total_price:
                 messagebox.showerror("Error", "Insufficient funds. Purchase cannot be completed.")
                 return
 
-            with open("books.csv", "r") as file:
+            with open("GroupProject4/files/books.csv", "r", encoding="utf-8") as file:
                 books_data = list(csv.DictReader(file))
 
             for book in books_data:
@@ -771,7 +773,7 @@ def open_employee_dashboard():
                     book['Inventory'] = str(int(book['Inventory']) + quantity)
                     break
 
-            with open("books.csv", "w", newline="") as file:
+            with open("GroupProject4/files/books.csv", "w", newline="", encoding="utf-8") as file:
                 fieldnames = books_data[0].keys()
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
@@ -779,7 +781,7 @@ def open_employee_dashboard():
 
             new_store_fund = store_fund - total_price
 
-            with open("storefund.txt", "w") as fund_file:
+            with open("GroupProject4/files/storefund.txt", "w", encoding="utf-8") as fund_file:
                 fund_file.write(f"{new_store_fund:.2f}")
 
             transaction_id = generate_transaction_id()
@@ -798,7 +800,7 @@ def open_employee_dashboard():
 
     def update_earnings_file(store_fund, units, total_spent, transaction_id):
         """ earnings.csv gets updated"""
-        with open("earnings.csv", "r") as earnings_file:
+        with open("GroupProject4/files/earnings.csv", "r", encoding="utf-8") as earnings_file:
             earnings_data = list(csv.DictReader(earnings_file))
 
         new_row = {
@@ -811,19 +813,19 @@ def open_employee_dashboard():
 
         earnings_data.append(new_row)
 
-        with open("earnings.csv", "w", newline="") as earnings_file:
+        with open("GroupProject4/files/earnings.csv", "w", newline="", encoding="utf-8") as earnings_file:
             fieldnames = ['store fund', 'units', 'totalearned', 'totalspent', 'transactionid']
             writer = csv.DictWriter(earnings_file, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(earnings_data)
-            
+
     def viewearnings():
         """ table view of earnings.csv"""
         blank_window = tk.Toplevel(employee_dashboard_window)
         blank_window.title("Earnings")
         blank_window.geometry("1250x350")
 
-        with open("storefund.txt", "r") as fund_file:
+        with open("GroupProject4/files/storefund.txt", "r", encoding="utf-8") as fund_file:
             store_fund_amount = float(fund_file.read().strip())
 
         store_fund_label = tk.Label(blank_window, text=f"Store Fund: ${store_fund_amount:.2f}")
@@ -839,7 +841,7 @@ def open_employee_dashboard():
         earnings_tree.heading("Total Spent", text="Total Spent")
         earnings_tree.heading("Transaction ID", text="Transaction ID")
 
-        with open("earnings.csv", "r") as earnings_file:
+        with open("GroupProject4/files/earnings.csv", "r", encoding="utf-8") as earnings_file:
             reader = csv.DictReader(earnings_file)
             for i, row in enumerate(reader, 1):
                 earnings_tree.insert("", "end", text=f"{i}", values=(row["store fund"], row["units"], row["totalearned"], row["totalspent"], row["transactionid"]))
@@ -849,7 +851,7 @@ def open_employee_dashboard():
         def convert_to_json():
             """ converts data to json"""
             earnings_data = []
-            with open("earnings.csv", "r") as earnings_file:
+            with open("GroupProject4/files/earnings.csv", "r", encoding="utf-8") as earnings_file:
                 reader = csv.DictReader(earnings_file)
                 for row in reader:
                     earnings_data.append({
@@ -862,15 +864,15 @@ def open_employee_dashboard():
 
             json_data = json.dumps(earnings_data, indent=2)
 
-            with open("earnings.json", "w") as json_file:
+            with open("earnings.json", "w", encoding="utf-8") as json_file:
                 json_file.write(json_data)
 
             tk.messagebox.showinfo("Conversion to JSON", "Earnings data has been converted to JSON successfully.")
-        
+
         button3 = tk.Button(blank_window, text="Convert to JSON", command=convert_to_json)
         button3.pack(pady=10)
 
-    
+
     def add_new_book():
         """ add a new book to inventory"""
         add_book_window = tk.Toplevel(employee_dashboard_window)
@@ -907,13 +909,13 @@ def open_employee_dashboard():
             try:
                 if not isbn_var.get().isdigit() or len(isbn_var.get()) != 13:
                     raise ValueError("ISBN must be 13 digits and consist only of numbers.")
-                
+
                 if not genre_var.get().isalpha():
                     raise ValueError("Genre must consist only of letters.")
 
                 float(price_var.get())
 
-                with open("books.csv", "a", newline="") as file:
+                with open("GroupProject4/files/books.csv", "a", newline="", encoding="utf-8") as file:
                     writer = csv.writer(file)
                     writer.writerow([book_name_var.get(), author_var.get(), "0", isbn_var.get(), genre_var.get(), price_var.get()])
 
@@ -927,7 +929,7 @@ def open_employee_dashboard():
         confirm_button = tk.Button(add_book_window, text="Add Book", command=add_book_to_inventory)
         confirm_button.pack(pady=10)
 
-    button1 = tk.Button(button_frame, text="Buy Inventory", command=buyInventory)
+    button1 = tk.Button(button_frame, text="Buy Inventory", command=buy_Inventory)
     button2 = tk.Button(button_frame, text="View Earnings", command=viewearnings)
     add_new_book_button = tk.Button(button_frame, text="Add New Book", command=add_new_book)
 
@@ -944,15 +946,17 @@ def logout(window):
     open_employee_login_window()
 
 def get_column_names(file_path):
+    """ gets column names"""
     with open(file_path, "r") as file:
         reader = csv.DictReader(file)
         return reader.fieldnames
 
 def show_details_window(row_data):
+    """ show book window"""
     details_window = tk.Toplevel(root)
     details_window.title("Row Details")
 
-    for col, value in zip(get_column_names("books.csv"), row_data):
+    for col, value in zip(get_column_names("GroupProject4/files/books.csv"), row_data):
         label = tk.Label(details_window, text=f"{col}: {value}")
         label.pack(pady=5)
 
@@ -960,22 +964,22 @@ root = tk.Tk()
 root.title("Login App")
 root.geometry("400x300")
 
-image_path = "shopping-basket.png"
+IMAGE_PATH = "GroupProject4/files/shopping-basket.png"
 try:
-    img = PhotoImage(file=image_path)
-    img = img.subsample(5)
+    IMG = PhotoImage(file=IMAGE_PATH)
+    IMG = IMG.subsample(5)
 except tk.TclError:
-    print(f"Error: Image file '{image_path}' not found.")
-    img = None
+    print(f"Error: Image file '{IMAGE_PATH}' not found.")
+    IMG = None
 
-if img:
-    image_label = tk.Label(root, image=img)
+if IMG:
+    image_label = tk.Label(root, image=IMG)
     image_label.pack(pady=10)
 
-button_width = 20
-button_height = 3
-customer_button = tk.Button(root, text="Customer Login", command=customer_login, width=button_width, height=button_height, compound=tk.TOP)
-employee_button = tk.Button(root, text="Employee Login", command=open_employee_login_window, width=button_width, height=button_height, compound=tk.TOP)
+BUTTON_WIDTH = 20
+BUTTON_HEIGHT = 3
+customer_button = tk.Button(root, text="Customer Login", command=customer_login, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, compound=tk.TOP)
+employee_button = tk.Button(root, text="Employee Login", command=open_employee_login_window, width=BUTTON_WIDTH, height=BUTTON_HEIGHT, compound=tk.TOP)
 
 customer_button.pack(pady=5)
 employee_button.pack(pady=5)
