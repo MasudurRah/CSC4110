@@ -1,3 +1,4 @@
+"""Modules to import tkinter, csv, and json functionality"""
 import tkinter as tk
 from tkinter import PhotoImage, messagebox
 from tkinter import ttk
@@ -9,9 +10,11 @@ import json
 img = None
 
 def customer_login():
+    """Launches customer login"""
     open_customer_login_window()
 
 def open_customer_login_window():
+    """Customer login window"""
     customer_login_window = tk.Toplevel(root)
     customer_login_window.title("Customer Login")
     customer_login_window.geometry("400x400")
@@ -37,6 +40,7 @@ def open_customer_login_window():
     register_button.pack(pady=10)
 
 def customer_login_check(username, password, window):
+    """Make sure customer login is working"""
     with open("GroupProject4/files/customer-info.csv", "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -50,6 +54,7 @@ def customer_login_check(username, password, window):
         open_registration_window()
 
 def open_registration_window():
+    """customer registeration window for new account"""
     registration_window = tk.Toplevel(root)
     registration_window.title("Customer Registration")
     registration_window.geometry("400x550")
@@ -97,6 +102,7 @@ def open_registration_window():
     register_button.pack(pady=10)
 
 def register_customer(username, password, email, address, zipcode, city, state, window):
+    """Customer registering page with validation """
     if not (username and password and email and address and zipcode and city and state):
         messagebox.showerror("Error", "All fields must have a value")
         return
@@ -137,6 +143,7 @@ def register_customer(username, password, email, address, zipcode, city, state, 
     open_blank_window("Registration Successful")
 
 def open_blank_window(title):
+    """Opens customer dashboard """
     global img
     blank_window = tk.Toplevel(root)
     blank_window.title(title)
@@ -182,6 +189,7 @@ def open_blank_window(title):
     logout_button.pack(pady=10)
 
 def open_cart_window():
+    """ Opens customer shopping cart"""
     cart_window = tk.Toplevel(root)
     cart_window.title("Shopping Cart")
     cart_window.geometry("400x300")
@@ -197,6 +205,7 @@ def open_cart_window():
     complete_purchase_button.pack(pady=10)
 
 def open_search_window():
+    """ Open search window for customer to view"""
     search_window = tk.Toplevel(root)
     search_window.title("Search")
     search_window.geometry("400x300")
@@ -210,6 +219,7 @@ def open_search_window():
     search_by_author.pack(pady=5)
 
 def load_filter_options(column_name):
+    """Loads filter selected by user """
     options = set()
     with open("GroupProject4/files/books.csv", "r") as file:
         reader = csv.DictReader(file)
@@ -228,6 +238,7 @@ def load_filter_options(column_name):
     search_button.pack(pady=10)
 
 def open_employee_login_window():
+    """Employee login window """
     employee_login_window = tk.Toplevel(root)
     employee_login_window.title("Employee Login")
     employee_login_window.geometry("400x350")
@@ -250,6 +261,7 @@ def open_employee_login_window():
     login_button.pack(pady=10)
 
 def apply_filter(column_name, filter_value):
+    """ Applying filter"""
     matching_rows = []
     with open("GroupProject4/files/books.csv", "r") as file:
         reader = csv.DictReader(file)
@@ -344,6 +356,7 @@ def apply_filter(column_name, filter_value):
 
 
 def buy_book(book_name, details_window):
+    """Buying inventory for books """
     with open("GroupProject4/files/books.csv", "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -376,6 +389,7 @@ def buy_book(book_name, details_window):
     cancel_button.pack(pady=10)
 
 def add_to_cart(book_name, quantity, buy_window):
+    """ Adding books to cart"""
     cart_window = tk.Toplevel(root)
     cart_window.title("Shopping Cart")
     cart_window.geometry("400x300")
@@ -401,6 +415,7 @@ def add_to_cart(book_name, quantity, buy_window):
     cancel_button.pack(pady=10)
 
 def get_book_price(book_name):
+    """ Grabs price of book from books.csv"""
     with open("GroupProject4/files/books.csv", "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -409,6 +424,7 @@ def get_book_price(book_name):
     return 0.0
 
 def complete_purchase(cart_window):
+    """ completes purchases and updates inventory and earnings sheet"""
     update_inventory()
 
     with open("GroupProject4/files/earnings.csv", "r") as earnings_file:
@@ -425,6 +441,7 @@ def complete_purchase(cart_window):
 
 
 def update_inventory():
+    """ Cart gets updated"""
     global cart
 
     with open("GroupProject4/files/books.csv", "r") as file:
@@ -491,6 +508,7 @@ def update_inventory():
 
 
 def sell_book(book_title):
+    """ Sell books to store"""
     with open("GroupProject4/files/books.csv", "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -539,6 +557,7 @@ def sell_book(book_title):
     cancel_button.pack(pady=10)
 
 def confirm_sale(book_title, quantity, price, sell_window):
+    """confirm sale of books to user """
     with open("GroupProject4/files/storefund.txt", "r") as fund_file:
         store_fund = float(fund_file.read().strip())
 
@@ -572,6 +591,7 @@ def confirm_sale(book_title, quantity, price, sell_window):
     messagebox.showinfo("Sale Confirmation", f"You have successfully sold {quantity} copies of {book_title} for a total of ${total_amount:.2f}.\nTransaction ID: {transaction_id}")
 
 def generate_unique_transaction_id():
+    """ generates transaction id """
     transaction_id = str(random.randint(100000000, 999999999))
 
     with open("GroupProject4/files/earnings.csv", "r") as file:
@@ -583,6 +603,7 @@ def generate_unique_transaction_id():
     return transaction_id
 
 def update_earnings_csv(transaction_id, quantity, total_price):
+    """ earnings.csv gets updated"""
     previous_store_fund = get_previous_store_fund()
 
     new_store_fund = previous_store_fund - total_price
@@ -594,6 +615,7 @@ def update_earnings_csv(transaction_id, quantity, total_price):
         writer.writerow([new_store_fund, quantity, total_earned, total_spent, transaction_id])
 
 def get_previous_store_fund():
+    """gets store fund """
     try:
         with open("GroupProject4/files/earnings.csv", "r") as file:
             reader = csv.reader(file)
@@ -606,6 +628,7 @@ def get_previous_store_fund():
         return 0.0
 
 def initialize_earnings_csv():
+    """ Initializes earnings """
     try:
         with open("GroupProject4/files/earnings.csv", "r") as file:
             pass
@@ -629,6 +652,7 @@ def login(username, password, window):
     messagebox.showerror("Error", "Invalid credentials")
 
 def update_treeview(tree):
+    """ table view updated"""
     for item in tree.get_children():
         tree.delete(item)
 
@@ -640,6 +664,7 @@ def update_treeview(tree):
     tree.after(1000, lambda: update_treeview(tree))
 
 def open_employee_dashboard():
+    """employee dashboard """
     employee_dashboard_window = tk.Toplevel(root)
     employee_dashboard_window.title("Employee Dashboard")
     employee_dashboard_window.geometry("1250x500")
@@ -677,6 +702,7 @@ def open_employee_dashboard():
     update_treeview(tree)
 
     def buyInventory():
+        """ buy new inventory"""
         buy_inventory_window = tk.Toplevel(employee_dashboard_window)
         buy_inventory_window.title("Buy Inventory")
         buy_inventory_window.geometry("400x300")
@@ -702,6 +728,7 @@ def open_employee_dashboard():
         total_price_label.pack(pady=5)
 
         def update_total_price(*args):
+            """ price gets updated by quantity"""
             try:
                 selected_book = book_var.get()
                 quantity = int(quantity_var.get())
@@ -724,6 +751,7 @@ def open_employee_dashboard():
         confirm_button.pack(pady=10)
 
     def confirm_purchase(book_name, quantity, total_price, buy_inventory_window):
+        """confirms purchase of inventory """
         try:
             quantity = int(quantity)
             total_price = float(total_price.split('$')[1])
@@ -765,9 +793,11 @@ def open_employee_dashboard():
             messagebox.showerror("Error", "Invalid quantity or total price. Please enter valid numbers.")
 
     def generate_transaction_id():
+        """ transaction id for buying books """
         return str(random.randint(10000000, 99999999))
 
     def update_earnings_file(store_fund, units, total_spent, transaction_id):
+        """ earnings.csv gets updated"""
         with open("GroupProject4/files/earnings.csv", "r") as earnings_file:
             earnings_data = list(csv.DictReader(earnings_file))
 
@@ -788,6 +818,7 @@ def open_employee_dashboard():
             writer.writerows(earnings_data)
             
     def viewearnings():
+        """ table view of earnings.csv"""
         blank_window = tk.Toplevel(employee_dashboard_window)
         blank_window.title("Earnings")
         blank_window.geometry("1250x350")
@@ -816,6 +847,7 @@ def open_employee_dashboard():
         earnings_tree.pack(pady=10)
 
         def convert_to_json():
+            """ converts data to json"""
             earnings_data = []
             with open("GroupProject4/files/earnings.csv", "r") as earnings_file:
                 reader = csv.DictReader(earnings_file)
@@ -840,6 +872,7 @@ def open_employee_dashboard():
 
     
     def add_new_book():
+        """ add a new book to inventory"""
         add_book_window = tk.Toplevel(employee_dashboard_window)
         add_book_window.title("Add New Book")
         add_book_window.geometry("400x400")
@@ -870,6 +903,7 @@ def open_employee_dashboard():
         price_entry.pack(pady=5)
 
         def add_book_to_inventory():
+            """ Adds book to inventory when books are filledout"""
             try:
                 if not isbn_var.get().isdigit() or len(isbn_var.get()) != 13:
                     raise ValueError("ISBN must be 13 digits and consist only of numbers.")
@@ -905,6 +939,7 @@ def open_employee_dashboard():
     logout_button.pack(pady=10)
 
 def logout(window):
+    """ employee logout button"""
     window.destroy()
     open_employee_login_window()
 
